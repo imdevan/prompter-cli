@@ -746,8 +746,7 @@ main .sl-markdown-content table {
 pre,
 pre code,
 .sl-markdown-content pre,
-.sl-markdown-content pre code,
-{
+.sl-markdown-content pre code {
   font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
   font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "ss02" 1, "ss03" 1, "ss04" 1, "ss05" 1, "ss06" 1, "ss07" 1, "ss08" 1;
   font-variant-ligatures: common-ligatures contextual;
