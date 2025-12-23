@@ -1,0 +1,36 @@
+---
+title: prompter list
+description: List all available prompt templates
+---
+
+Display all available templates from all configured locations.
+
+## Usage
+
+```bash
+prompter list
+```
+
+## Output
+
+```
+Prompt locations:
+  - ~/project/prompts (local)
+  - ~/.config/prompter/prompts
+  - ~/work-templates (custom: work)
+
+Pre-templates:
+  - question
+  - debug (local)
+  - architecture (custom: work)
+
+Post-templates:
+  - clarify
+  - strict (local)
+```
+
+## Location Indicators
+
+- **No marker**: From main configured location
+- **(local)**: From local project directory
+- **(custom: name)**: From custom template location

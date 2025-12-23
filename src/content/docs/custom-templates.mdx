@@ -1,0 +1,62 @@
+---
+title: Custom Templates
+description: Create custom template locations with personalized CLI flags
+---
+
+Custom templates let you define additional template directories with their own CLI flags.
+
+## Configuration
+
+Define custom templates in `config.toml`:
+
+```toml
+[custom_template.work]
+location = "~/work-templates"
+flag = "work"
+shorthand = "w"
+type = "pre"
+interactive = true
+description = "work-specific templates"
+```
+
+## Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `location` | `prompts_location/name` | Template directory path |
+| `flag` | template name | CLI flag name |
+| `shorthand` | none | Single character shorthand |
+| `type` | `"pre"` | `"pre"` or `"post"` |
+| `interactive` | `true` | Show in interactive mode |
+| `description` | auto | Help text |
+
+## Usage
+
+Once configured, use the generated flags:
+
+```bash
+prompter --work "Implement user authentication"
+prompter -w "Implement user authentication"  # shorthand
+```
+
+## Directory Structure
+
+Custom template locations follow the standard structure:
+
+```
+~/work-templates/
+├── pre/
+│   └── architecture.md
+├── post/
+│   └── testing.md
+└── fix.md
+```
+
+## Discovery
+
+Custom templates appear in `prompter list` and interactive mode (if `interactive = true`):
+
+```bash
+prompter list
+# Shows: architecture (custom: work)
+```

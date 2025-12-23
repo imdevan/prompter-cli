@@ -1,0 +1,206 @@
+---
+title: Usage Guide
+description: Core features and workflows for Prompter CLI
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Basic Prompts
+
+```bash
+# Simple prompt (copies to clipboard by default)
+prompter "How do I implement JWT authentication in Go?"
+
+# Output to terminal instead
+prompter --target stdout "How do I implement JWT authentication in Go?"
+```
+
+## Templates
+
+Templates make prompts consistent and reusable. They're stored in `~/.config/prompter/prompts/` with `pre/` and `post/` subdirectories.
+
+### Using Templates
+
+```bash
+# Pre-templates add context before your prompt
+prompter --pre question "How does OAuth work?"
+
+# Post-templates add instructions after your prompt
+prompter --post clarify "Explain microservices architecture"
+
+# Combine both
+prompter --pre question --post clarify "What are design patterns?"
+```
+
+### Creating Templates
+
+```bash
+# Interactive creation
+prompter add --pre my-template
+
+# With content directly
+prompter add --pre debug "# Debug\n\nHelp me debug this issue.\n\n# Problem"
+
+# From clipboard
+prompter add --post review --clipboard
+```
+
+### Template Structure
+
+Templates use Go template syntax:
+
+```markdown
+# Question
+
+The following prompt is a question about {{ .CWD }}.
+
+{{- if .Git.Branch }}
+Branch: {{ .Git.Branch }}
+{{- end }}
+
+# Prompt
+{{ .Prompt }}
+```
+
+**Available variables:**
+- `{{ .Prompt }}` - Base prompt text
+- `{{ .CWD }}` - Current working directory
+- `{{ .Now }}` - Current timestamp
+- `{{ .Git.Root }}`, `{{ .Git.Branch }}`, `{{ .Git.Commit }}`, `{{ .Git.Dirty }}` - Git info
+- `{{ .Env.VARIABLE }}` - Environment variables
+- `{{ .Fix.Enabled }}`, `{{ .Fix.Output }}` - Fix mode data
+
+### Managing Templates
+
+```bash
+# List all templates
+prompter list
+
+# Open templates directory in editor
+prompter prompts
+```
+
+## Including Context
+
+### Files
+
+```bash
+# Single file
+prompter --file main.go "Review this code"
+
+# Multiple files
+prompter --file main.go --file config.go "Review these files"
+```
+
+### Directory Structure
+
+```bash
+prompter --directory "Explain this project structure"
+```
+
+### Clipboard Content
+
+```bash
+prompter --clipboard "Explain this code I copied"
+```
+
+## Fix Mode
+
+Fix mode captures command output for debugging help:
+
+```bash
+# Pipe failing command output
+go build ./... 2>&1 | prompter --fix "Help me fix this"
+
+# Use saved error output
+prompter --fix --fix-file error.log "Analyze this error"
+
+# Combine with templates
+npm test 2>&1 | prompter --fix --pre debug
+```
+
+## Interactive Mode
+
+Let Prompter guide you through options:
+
+```bash
+prompter --interactive
+```
+
+Force non-interactive mode:
+
+```bash
+prompter --yes "My prompt"
+```
+
+## Output Options
+
+<Tabs>
+<TabItem label="Clipboard">
+
+```bash
+prompter "My prompt"  # Default
+prompter --target clipboard "My prompt"
+```
+
+</TabItem>
+<TabItem label="Terminal">
+
+```bash
+prompter --target stdout "My prompt"
+```
+
+</TabItem>
+<TabItem label="File">
+
+```bash
+prompter --target file:/tmp/prompt.txt "My prompt"
+```
+
+</TabItem>
+<TabItem label="Editor">
+
+```bash
+prompter --editor nvim "My prompt"
+```
+
+</TabItem>
+</Tabs>
+
+## Common Workflows
+
+### Code Review
+```bash
+prompter --pre question --file src/auth.go "Review this authentication code"
+```
+
+### Debugging
+```bash
+npm test 2>&1 | prompter --fix --pre debug
+```
+
+### Architecture Questions
+```bash
+prompter --pre question --directory "How should I structure this project?"
+```
+
+### Documentation
+```bash
+prompter --file README.md --post clarify "Help me improve this documentation"
+```
+
+## Local Project Templates
+
+Place a `prompts/` directory in your project for project-specific templates:
+
+```
+my-project/
+├── prompts/
+│   ├── pre/
+│   │   └── project-context.md
+│   └── post/
+│       └── project-review.md
+└── src/
+```
+
+Local templates take priority over global templates.

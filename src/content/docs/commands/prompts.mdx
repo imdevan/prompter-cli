@@ -1,0 +1,35 @@
+---
+title: prompter prompts
+description: Open the prompts directory in your editor
+---
+
+Open your main prompts directory in your configured editor.
+
+## Usage
+
+```bash
+prompter prompts
+```
+
+## Configuration
+
+Set your editor in `config.toml`:
+
+```toml
+editor = "code"  # VS Code
+# editor = "nvim"
+# editor = "vim"
+```
+
+## Directory Structure
+
+```
+prompts/
+├── pre/
+│   ├── question.md
+│   └── debug.md
+├── post/
+│   ├── clarify.md
+│   └── strict.md
+└── fix.md
+```

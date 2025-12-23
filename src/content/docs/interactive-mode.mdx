@@ -1,0 +1,69 @@
+---
+title: Interactive Mode
+description: Use interactive prompts to select templates and configure options
+---
+
+Interactive mode guides you through template selection without remembering flag names.
+
+Interactive mode is the default way prompter handles generating. It can be disabled in the config
+by setting `interactive_default = false`
+
+```toml title="config.toml"
+interactive_default = true | false
+```
+
+## Enabling Interactive Mode
+
+Interactive mode is enabled by default. But if you have it disabled in your config you
+can still enter interactive mode using the interactive flag.
+
+```bash
+# Force interactive mode
+prompter --interactive "My prompt"
+prompter -i "My prompt"
+```
+
+## --Yes (Force non-interactive mode)
+
+You can force non-interactive mode which assume the default options for any interactive templates.
+
+```bash
+# Force non-interactive mode
+prompter --yes "My prompt"
+prompter -y "My prompt"
+```
+
+## Force non-interactive by default
+
+## Interactive Flow
+
+When enabled, you'll see menus like:
+
+```
+Select pre-template (or press Enter to skip):
+1. question
+2. debug
+3. architecture (custom: work)
+
+Enter selection (1-3) or template name:
+```
+
+## Number Key Selection
+
+Enable quick single-key selection:
+
+```bash
+prompter --numbers --interactive "My prompt"
+```
+
+## Controlling Template Visibility
+
+Control which custom templates appear in interactive mode:
+
+```toml
+[custom_template.work]
+interactive = true   # Appears in menus
+
+[custom_template.internal]
+interactive = false  # Hidden from menus
+```

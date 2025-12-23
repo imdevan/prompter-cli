@@ -1,0 +1,74 @@
+---
+title: Configuration File Reference
+description: All configuration options for config.toml
+---
+
+Location: `~/.config/prompter/config.toml`
+
+## Core Settings
+
+```toml
+# Template directory
+prompts_location = "~/.config/prompter/prompts"
+
+# Local templates directory name
+local_prompts_location = "prompts"
+
+# Editor for opening templates
+editor = "code"
+
+# Output destination: "clipboard", "stdout", or "file:/path"
+target = "clipboard"
+
+# Default to interactive mode
+interactive_default = true
+
+# Directory listing strategy: "git" or "filesystem"
+directory_strategy = "git"
+
+# Default templates
+default_pre = ""
+default_post = ""
+
+# Fix mode output file
+fix_file = "/tmp/prompter-fix.txt"
+```
+
+## Custom Templates
+
+```toml
+[custom_template.work]
+location = "~/work-templates"
+flag = "work"
+shorthand = "w"
+type = "pre"
+interactive = true
+description = "work-specific templates"
+```
+
+### Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `location` | `prompts_location/name` | Template directory |
+| `flag` | template name | CLI flag name |
+| `shorthand` | none | Single char shorthand |
+| `type` | `"pre"` | `"pre"` or `"post"` |
+| `interactive` | `true` | Show in interactive mode |
+| `description` | auto | Help text |
+
+## Environment Variables
+
+Override config with `PROMPTER_` prefix:
+
+```bash
+export PROMPTER_EDITOR="nvim"
+export PROMPTER_TARGET="stdout"
+```
+
+## Precedence
+
+1. Command-line flags (highest)
+2. Environment variables
+3. Config file
+4. Built-in defaults (lowest)

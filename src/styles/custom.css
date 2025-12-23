@@ -1,0 +1,773 @@
+/* Fonts are loaded via preload links in Head.astro for better performance */
+
+/* Font face declarations as fallback */
+@font-face {
+  font-family: 'IBM Plex Mono Fallback';
+  src: local('Menlo'), local('Monaco'), local('Consolas'), local('Liberation Mono'), local('Courier New');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fira Code Fallback';
+  src: local('Menlo'), local('Monaco'), local('Consolas'), local('Liberation Mono'), local('Courier New');
+  font-display: swap;
+}
+
+/* Global font settings */
+* {
+  font-feature-settings: inherit;
+  font-variant-ligatures: inherit;
+}
+
+/* Default font family for all text - more aggressive selectors */
+html, body, 
+.sl-markdown-content,
+.content-panel,
+h1, h2, h3, h4, h5, h6,
+p, span, div, a, button, input, textarea, select,
+.sidebar-content,
+.sidebar-pane,
+nav.sidebar,
+.right-sidebar,
+.starlight-aside,
+.sl-container,
+button.terminal-tab{
+  font-family: 'IBM Plex Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+}
+
+/* Override any Starlight theme fonts */
+:root {
+  --sl-font: 'IBM Plex Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+  --sl-font-mono: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Ultra-aggressive font overrides */
+div > span,
+a > span,
+.link-title,
+  * {
+  font-family: 'IBM Plex Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+}
+
+/* Specific overrides for code elements */
+code, pre, 
+.expressive-code *, 
+.sl-markdown-content code,
+.sl-markdown-content pre,
+.sl-markdown-content pre *,
+.expressive-code pre *,
+.expressive-code code *,
+.terminal-content span {
+  font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+}
+
+:root {
+  /* Soft cream/yellow base - retro hacker aesthetic */
+  --sl-color-bg: hsl(48, 40%, 96%);
+  --sl-color-gray-5: hsl(48, 30%, 85%);
+  --sl-nav-gap: 40px;
+  --sl-color-text: hsl(220, 20%, 10%);
+  --sl-border-color: hsl(220, 20%, 10%);
+  --sl-color-hairline-shade: hsl(48, 30%, 85%);
+
+  --color-background: hsl(48, 40%, 96%);
+  --color-background-weak: hsl(48, 35%, 94%);
+  --color-background-weak-hover: hsl(48, 35%, 92%);
+  --color-background-strong: hsl(220, 20%, 10%);
+  --color-background-strong-hover: hsl(220, 20%, 15%);
+  --color-background-interactive: hsl(142, 70%, 45%);
+  --color-background-interactive-weaker: hsl(48, 30%, 88%);
+
+  /* Vibrant terminal green as primary */
+  --color-primary: hsl(142, 70%, 45%);
+  --color-primary-foreground: hsl(0, 0%, 100%);
+  
+  /* Electric cyan as accent */
+  --color-accent: hsl(185, 80%, 45%);
+  --color-accent-foreground: hsl(0, 0%, 100%);
+  
+  /* Muted purple for secondary */
+  --color-secondary: hsl(280, 30%, 90%);
+  --color-secondary-foreground: hsl(280, 40%, 30%);
+
+  --color-text: hsl(220, 20%, 10%);
+  --color-text-weak: hsl(220, 10%, 45%);
+  --color-text-weaker: hsl(48, 20%, 60%);
+  --color-text-strong: hsl(220, 20%, 10%);
+  --color-text-inverted: hsl(0, 0%, 100%);
+
+  --color-border: hsl(220, 20%, 10%);
+  --color-border-weak: hsl(48, 30%, 85%);
+
+  --color-icon: hsl(220, 20%, 10%);
+
+  /* Hard shadow variables - sharp shadows */
+  --shadow-hard: 4px 4px 0px hsl(220, 20%, 10%);
+  --shadow-hard-sm: 2px 2px 0px hsl(220, 20%, 10%);
+  --shadow-hard-lg: 6px 6px 0px hsl(220, 20%, 10%);
+  --shadow-primary: 4px 4px 0px hsl(142, 70%, 35%);
+  --shadow-accent: 4px 4px 0px hsl(185, 80%, 35%);
+
+  /* Code block colors - Synthwave inspired light mode */
+  /* --code-bg: hsl(48, 35%, 94%); */
+    --code-bg: hsl(0, 0%, 3.9%);
+
+  --code-border: hsl(142, 70%, 45%);
+  --code-text: hsl(220, 20%, 20%);
+
+  /* For the share component */
+  --sl-color-bg-surface: var(--sl-color-bg-nav);
+  --sl-color-divider: var(--sl-color-gray-5);
+}
+
+body {
+  color: var(--color-text) !important;
+  font-size: 14px !important;
+  font-family: 'IBM Plex Mono', 'IBM Plex Mono Fallback', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+  font-feature-settings: "liga" 1, "calt" 1;
+  font-variant-ligatures: common-ligatures contextual;
+
+  @media (prefers-color-scheme: dark) {
+    /* Deep navy/purple dark mode */
+    --sl-color-bg: hsl(240, 20%, 8%);
+    --sl-color-gray-5: hsl(240, 15%, 20%);
+    --sl-color-text: hsl(48, 40%, 92%);
+    --sl-border-color: hsl(240, 15%, 20%);
+    --sl-color-hairline-shade: hsl(240, 15%, 20%);
+
+    --color-background: hsl(240, 20%, 8%);
+    --color-background-weak: hsl(240, 18%, 12%);
+    --color-background-strong: hsl(48, 40%, 92%);
+    --color-background-strong-hover: hsl(48, 40%, 95%);
+    --color-background-interactive: hsl(142, 80%, 55%);
+    --color-background-interactive-weaker: hsl(240, 15%, 18%);
+
+    /* Neon green primary */
+    --color-primary: hsl(142, 80%, 55%);
+    --color-primary-foreground: hsl(240, 20%, 8%);
+    
+    /* Neon cyan accent */
+    --color-accent: hsl(185, 90%, 55%);
+    --color-accent-foreground: hsl(240, 20%, 8%);
+    
+    /* Purple secondary */
+    --color-secondary: hsl(280, 40%, 25%);
+    --color-secondary-foreground: hsl(280, 30%, 85%);
+
+    --color-text: hsl(48, 40%, 92%);
+    --color-text-weak: hsl(48, 20%, 60%);
+    --color-text-weaker: hsl(48, 15%, 45%);
+    --color-text-strong: hsl(48, 40%, 92%);
+    --color-text-inverted: hsl(240, 20%, 8%);
+
+    --color-border: hsl(240, 15%, 20%);
+    --color-border-weak: hsl(240, 15%, 20%);
+
+    --color-icon: hsl(48, 40%, 92%);
+
+    /* Hard shadow variables - dark mode */
+    --shadow-hard: 4px 4px 0px hsl(142, 80%, 30%);
+    --shadow-hard-sm: 2px 2px 0px hsl(142, 80%, 30%);
+    --shadow-hard-lg: 6px 6px 0px hsl(142, 80%, 30%);
+    --shadow-primary: 4px 4px 0px hsl(142, 80%, 35%);
+    --shadow-accent: 4px 4px 0px hsl(185, 90%, 35%);
+
+    /* Code block colors - Synthwave 84 inspired */
+    /* --code-bg: hsl(260, 30%, 12%); */
+    --code-bg: hsl(0, 0%, 3.9%);
+    --code-border: hsl(142, 80%, 55%);
+    --code-text: hsl(48, 40%, 90%);
+  }
+}
+
+.header:where(.astro-tcroauqe) {
+  border-bottom: 2px solid var(--color-border) !important;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.sl-markdown-content hr {
+  border-bottom: 2px solid var(--color-border) !important;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+#starlight__on-this-page--mobile {
+  border-bottom: 2px solid var(--color-border) !important;
+}
+
+mobile-starlight-toc nav summary .toggle {
+  opacity: 60% !important;
+  text-decoration: none !important;
+}
+
+starlight-toc * {
+  border-radius: 0 !important;
+}
+
+nav.sidebar summary svg.caret {
+  color: var(--color-icon) !important;
+}
+
+/* Search button style overrides */
+body > .page > header button[data-open-modal] > kbd {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+body > .page > header button[data-open-modal] > kbd > kbd {
+  color: var(--color-icon) !important;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Make the Cmd (⌘) keystroke bigger */
+body > .page > header button[data-open-modal][aria-keyshortcuts="Meta+K"] > kbd > kbd:first-child {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.starlight-aside__title {
+  flex: 0 0 auto;
+  margin-top: 3px;
+}
+
+body > .page > .main-frame .main-pane > main > .content-panel + .content-panel {
+  border-top: none !important;
+}
+
+body > .page > header a.site-title img {
+  height: 2rem !important;
+}
+
+a {
+  color: var(--color-text-strong) !important;
+}
+
+.page-description {
+  color: var(--color-text) !important;
+}
+
+.right-sidebar {
+  border-inline-start: none !important;
+}
+
+.sidebar-pane {
+  border-inline-end: 2px solid var(--color-border) !important;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.right-sidebar-panel {
+  padding: 24px 0 !important;
+  color: var(--color-text-weaker);
+}
+
+.sidebar-content {
+  padding: 24px 0 !important;
+}
+
+a[aria-current="page"] {
+  border-left: 3px solid var(--color-primary) !important;
+  background: var(--color-background-weak) !important;
+  font-weight: 600 !important;
+  box-shadow: inset 2px 0 0 var(--color-primary);
+}
+
+ul.top-level a[aria-current="page"] > span {
+  color: var(--color-text-strong) !important;
+}
+
+#starlight__sidebar {
+  background: var(--code-bg) !important;
+}
+
+#starlight__sidebar ul li ul li {
+  margin: 0 !important;
+  border-inline-start: none;
+  padding-left: 0 !important;
+}
+
+#starlight__sidebar > div > sl-sidebar-state-persist > ul > li > details > summary {
+  padding: 8px 24px !important;
+  margin-top: 20px !important;
+}
+
+#starlight__sidebar > div > sl-sidebar-state-persist > ul > li > details > summary:hover {
+  background: var(--color-background-weak);
+  transform: translateX(2px);
+  transition: all 0.15s ease;
+}
+
+#starlight__sidebar > div > sl-sidebar-state-persist > ul > li > details > summary span {
+  color: var(--color-text-strong) !important;
+  font-weight: 600 !important;
+}
+
+.top-level li a {
+  border-radius: 0 !important;
+  width: 100%;
+  padding: 4px 24px !important;
+  transition: all 0.15s ease;
+}
+
+.top-level li a:hover {
+  background: var(--color-background-weak) !important;
+  transform: translateX(2px);
+}
+
+.right-group {
+  gap: 40px !important;
+}
+
+.social-icons {
+  gap: 24px !important;
+}
+
+.social-icons a svg {
+  height: 18px !important;
+  width: 18px !important;
+}
+
+site-search > button {
+  text-transform: none !important;
+}
+
+body > .page > header button[data-open-modal] {
+  gap: 12px !important;
+  background: var(--color-background-weak);
+  border: 2px solid var(--color-border) !important;
+  padding: 6px 12px !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-hard-sm);
+  transition: all 0.15s ease;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-background-weak);
+  }
+}
+
+body > .page > header button[data-open-modal]:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+}
+
+body > .page > header button[data-open-modal]:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+body > .page > header button[data-open-modal] {
+  background: var(--color-background-weak);
+}
+
+site-search > button span {
+  text-decoration: none !important;
+}
+
+.starlight-aside {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+
+  .starlight-aside__content {
+    margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+site-search > button > kbd {
+  font-size: 14px !important;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  color: var(--color-text-strong) !important;
+}
+
+h1 {
+  font-size: 3rem !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  color: var(--color-text-strong) !important;
+}
+
+h2 {
+  font-size: 1.5rem !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  color: var(--color-text-strong) !important;
+}
+
+h3 {
+  font-size: 1.25rem !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  color: var(--color-text-strong) !important;
+}
+
+h4 {
+  font-size: 1rem !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  color: var(--color-text-strong) !important;
+}
+
+strong {
+  font-weight: 500 !important;
+}
+
+ul,
+ol {
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+.sl-markdown-content .tab > [role="tab"][aria-selected="true"] {
+  border-color: var(--color-primary) !important;
+  background: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+
+.social-icons a svg {
+  color: var(--color-text-weak) !important;
+  transition: all 0.15s ease;
+}
+
+.social-icons a svg:hover {
+  color: var(--color-primary) !important;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 4px 0 var(--color-primary));
+}
+
+body > .page > header,
+:root[data-has-sidebar] body > .page > header {
+  /* background: var(--color-background) !important; */
+  background: var(--code-bg) !important;
+  padding: 24px !important;
+  border-bottom: 2px solid var(--color-border) !important;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.sl-container {
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.right-sidebar-panel nav,
+.right-sidebar-panel h2,
+.right-sidebar-panel ul,
+.right-sidebar-panel li,
+.right-sidebar-panel a {
+  display: block;
+  width: 100%;
+}
+
+.sl-container {
+  max-width: 100% !important;
+}
+
+nav.sidebar .sl-container ul li a,
+div.right-sidebar .sl-container ul li a {
+  padding: 4px 24px !important;
+  width: 100% !important;
+  color: var(--color-text-weaker);
+  opacity: 50%;
+  transition: all 0.15s ease;
+}
+
+nav.sidebar .sl-container ul li a:hover,
+div.right-sidebar .sl-container ul li a:hover {
+  background: var(--color-background-weak);
+  transform: translateX(2px);
+  color: var(--color-primary) !important;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-background-weak);
+  }
+}
+
+nav.sidebar .sl-container ul li ul li,
+div.right-sidebar .sl-container ul li ul li {
+  padding: 4px 12px 0 12px !important;
+}
+
+nav.sidebar .sl-container ul li a[aria-current="true"],
+div.right-sidebar .sl-container ul li a[aria-current="true"] {
+  color: var(--color-primary) !important;
+  opacity: 100%;
+  font-weight: 600 !important;
+  border-left: 2px solid var(--color-primary) !important;
+}
+
+h2#starlight__on-this-page {
+  font-size: 14px !important;
+  color: var(--color-text-strong) !important;
+  margin: 0 !important;
+  font-weight: 400 !important;
+  padding: 0 24px 12px 24px;
+}
+
+#starlight__on-this-page ul {
+  color: var(--color-text-strong) !important;
+  font-size: 16px !important;
+}
+
+.middle-group .links {
+  color: var(--color-icon);
+  text-decoration: none;
+  text-transform: none;
+  font-size: 16px;
+}
+
+.middle-group .links:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+nav.sidebar ul.top-level > li > details > summary .group-label > span {
+  margin-top: 24px !important;
+  color: var(--color-text-strong) !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+.content-panel {
+  padding: 2rem 3rem !important;
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.5rem !important;
+  }
+}
+
+.expressive-code {
+  margin: 0.75rem 0 3rem 0 !important;
+  border-radius: 0 !important;
+}
+
+.expressive-code figure {
+  background: var(--code-bg) !important;
+  border: 2px solid var(--code-border) !important;
+  /* box-shadow: var(--shadow-hard) !important; */
+  box-shadow: var(--shadow-hard-lg) !important;
+}
+
+/* .expressive-code .frame { */
+/*   box-shadow: none !important; */
+/* } */
+
+/* .expressive-code:hover figure { */
+/*   transform: translate(-2px, -2px); */
+/*   box-shadow: var(--shadow-hard-lg) !important; */
+/*   transition: all 0.2s ease; */
+/* } */
+
+/* Position figcaption.header to the right of icon buttons ::before element */
+.expressive-code figcaption.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.expressive-code figcaption.header::before {
+  order: -1;
+  flex-shrink: 0;
+}
+
+/* Hard shadow card style for interactive elements */
+a, button {
+  transition: all 0.15s ease-in-out;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary) !important;
+}
+
+/* Buttons with hard shadows */
+button:not([data-open-modal]) {
+  border: 2px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+button:not([data-open-modal]):hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+}
+
+button:not([data-open-modal]):active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* Social icons with hover effects */
+.social-icons a {
+  transition: all 0.15s ease;
+  border-radius: 0;
+}
+
+.social-icons a:hover {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 4px 0 var(--color-primary));
+}
+
+/* Links with accent color */
+a:not([aria-current="page"]):hover {
+  color: var(--color-primary) !important;
+}
+
+/* Headings with stronger weight */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600 !important;
+  letter-spacing: -0.02em;
+}
+
+/* Strong emphasis */
+strong {
+  font-weight: 600 !important;
+  color: var(--color-text-strong);
+}
+
+/* Tabs with hard shadows */
+.sl-markdown-content .tab > [role="tab"] {
+  border: 2px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-hard-sm);
+  transition: all 0.15s ease;
+}
+
+.sl-markdown-content .tab > [role="tab"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hard);
+}
+
+.sl-markdown-content .tab > [role="tab"][aria-selected="true"] {
+  border-color: var(--color-primary) !important;
+  background: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+
+/* Asides with hard shadows */
+.starlight-aside {
+  border: 2px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-hard-sm);
+  background: var(--color-background-weak) !important;
+}
+
+/* Search button enhancements */
+site-search > button {
+  border: 2px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  transition: all 0.15s ease;
+}
+
+site-search > button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+}
+
+/* Content panel with subtle shadow */
+.content-panel {
+  position: relative;
+}
+
+/* Blockquotes with hard shadows */
+.sl-markdown-content blockquote {
+  border-left: 3px solid var(--color-primary) !important;
+  background: var(--color-background-weak) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-hard-sm);
+  padding: 1rem 1.5rem !important;
+  margin: 1.5rem 0 !important;
+}
+
+
+
+/* Tables full width */
+.sl-markdown-content table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+
+.sl-markdown-content table th,
+.sl-markdown-content table td {
+  width: auto !important;
+  word-wrap: break-word !important;
+}
+
+/* Ensure table container is full width */
+.sl-markdown-content .table-container,
+.sl-markdown-content div:has(table) {
+  width: 100% !important;
+}
+
+/* Override any Starlight table width restrictions */
+.content-panel .sl-markdown-content table,
+main .sl-markdown-content table {
+  width: 100% !important;
+  table-layout: fixed !important;
+}
+
+/* Code inline with accent color */
+.sl-markdown-content code:not(pre code) {
+  background: var(--color-background-weak) !important;
+  border: 1px solid var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  padding: 2px 6px !important;
+  border-radius: 0 !important;
+  font-weight: 500 !important;
+  box-shadow: var(--shadow-hard-sm);
+  font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+  font-feature-settings: "liga" 1, "calt" 1;
+  font-variant-ligatures: common-ligatures contextual;
+}
+
+/* Code blocks and showcase blocks use Fira Code */
+.expressive-code pre,
+.expressive-code code,
+pre,
+pre code,
+.sl-markdown-content pre,
+.sl-markdown-content pre code,
+{
+  font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+  font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "ss02" 1, "ss03" 1, "ss04" 1, "ss05" 1, "ss06" 1, "ss07" 1, "ss08" 1;
+  font-variant-ligatures: common-ligatures contextual;
+}
+
+/* Ensure all code elements use Fira Code with ligatures */
+code {
+  font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
+  font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "ss02" 1, "ss03" 1, "ss04" 1, "ss05" 1, "ss06" 1, "ss07" 1, "ss08" 1;
+  font-variant-ligatures: common-ligatures contextual;
+}
+
+@media (prefers-color-scheme: dark) {
+  .shiki,
+  .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    /* Optional, if you also want font styles */
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}

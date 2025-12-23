@@ -1,0 +1,91 @@
+---
+title: Examples
+description: Real-world examples for Prompter CLI
+---
+
+## Basic Usage
+
+```bash
+# Simple question
+prompter "How do I implement JWT authentication?"
+
+# With templates
+prompter --pre question --post clarify "How does OAuth work?"
+
+# Include files
+prompter --file main.go "Review this code"
+
+# Include directory
+prompter --directory "Explain this project"
+```
+
+## Fix Mode
+
+```bash
+# Pipe failing command
+go test 2>&1 | prompter --fix "Help me fix this"
+
+# With template
+npm test 2>&1 | prompter --fix --pre debug
+```
+
+## Template Examples
+
+### Question Template (`pre/question.md`)
+```markdown
+# Question
+
+{{- if .Git.Branch }}
+Branch: {{ .Git.Branch }}
+{{- end }}
+
+## Question
+{{ .Prompt }}
+```
+
+### Debug Template (`pre/debug.md`)
+```markdown
+# Debug
+
+{{- if .Fix.Output }}
+## Error Output
+{{ mdFence "text" .Fix.Output }}
+{{- end }}
+
+## Request
+{{ .Prompt }}
+```
+
+### Review Template (`post/review.md`)
+```markdown
+## Review Checklist
+- Security
+- Performance
+- Maintainability
+- Test coverage
+```
+
+## Workflows
+
+### Code Review
+```bash
+prompter --file auth.go --pre question --post review "Review this"
+```
+
+### Debugging
+```bash
+go build 2>&1 | prompter --fix --pre debug
+```
+
+### Architecture
+```bash
+prompter --directory --pre question "How should I structure this?"
+```
+
+## Shell Aliases
+
+```bash
+alias pq='prompter --pre question'
+alias pd='prompter --pre debug --fix'
+alias pr='prompter --pre code-review'
+```

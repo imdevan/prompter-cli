@@ -1,0 +1,62 @@
+---
+title: Multiple Template Locations
+description: Organize templates across multiple directories
+---
+
+Prompter supports multiple template locations for flexible organization.
+
+## Location Hierarchy
+
+1. Local templates (highest priority)
+2. Custom template locations
+3. Global templates (lowest priority)
+
+## Configuration
+
+```toml
+# Primary location
+prompts_location = "~/.config/prompter/prompts"
+
+# Local directory name
+local_prompts_location = "prompts"
+
+# Custom locations
+[custom_template.work]
+location = "~/work-templates"
+flag = "work"
+
+[custom_template.team]
+location = "/shared/team-templates"
+flag = "team"
+```
+
+## Organization Strategies
+
+### By Purpose
+```toml
+[custom_template.debugging]
+location = "~/templates/debugging"
+flag = "debug-mode"
+
+[custom_template.review]
+location = "~/templates/review"
+flag = "review"
+```
+
+### By Team
+```toml
+[custom_template.frontend]
+location = "/shared/frontend-templates"
+flag = "fe"
+
+[custom_template.backend]
+location = "/shared/backend-templates"
+flag = "be"
+```
+
+## Usage
+
+```bash
+prompter list  # Shows all locations
+prompter --work --review "Implement feature"
+```

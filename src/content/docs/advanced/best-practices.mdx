@@ -1,0 +1,69 @@
+---
+title: Best Practices
+description: Guidelines for effective use of Prompter CLI
+---
+
+## Template Organization
+
+Use clear, descriptive names:
+
+```
+pre/
+├── question.md
+├── code-review.md
+├── debug.md
+└── api-design.md
+```
+
+## Template Content
+
+Include context variables:
+
+```markdown
+# Code Review
+
+{{- if .Git.Branch }}
+Branch: {{ .Git.Branch }}
+{{- end }}
+
+## Request
+{{ .Prompt }}
+
+## Review Criteria
+- Security
+- Performance
+- Maintainability
+```
+
+## Configuration
+
+### Personal Setup
+```toml
+prompts_location = "~/.config/prompter/prompts"
+editor = "nvim"
+interactive_default = true
+```
+
+### Team Setup
+```toml
+[custom_template.team]
+location = "/shared/team-templates"
+flag = "team"
+interactive = true
+```
+
+## Workflow Tips
+
+1. Start with interactive mode when learning
+2. Create templates for repeated tasks
+3. Use local templates for project-specific needs
+4. Version control your templates
+5. Share useful templates with your team
+
+## Shell Aliases
+
+```bash
+alias pq='prompter --pre question'
+alias pd='prompter --pre debug --fix'
+alias pr='prompter --pre code-review'
+```

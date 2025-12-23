@@ -1,0 +1,101 @@
+---
+title: Prompter CLI
+description: A CLI tool for assembling high-quality prompts for AI coding agents
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components"
+
+Prompter CLI assembles prompts for AI coding agents by combining templates with contextual information from your project.
+
+## Install
+
+<Tabs>
+<TabItem label="Homebrew">
+
+```bash
+brew install imdevan/prompter/prompter
+```
+
+</TabItem>
+<TabItem label="GitHub Releases">
+
+Download the latest binary from [GitHub Releases](https://github.com/imdevan/prompter/releases):
+
+```bash
+# macOS (Apple Silicon)
+curl -L https://github.com/imdevan/prompter/releases/latest/download/prompter-darwin-arm64 -o prompter
+
+# macOS (Intel)
+curl -L https://github.com/imdevan/prompter/releases/latest/download/prompter-darwin-amd64 -o prompter
+
+# Linux
+curl -L https://github.com/imdevan/prompter/releases/latest/download/prompter-linux-amd64 -o prompter
+
+chmod +x prompter
+sudo mv prompter /usr/local/bin/
+```
+
+</TabItem>
+</Tabs>
+
+Verify installation:
+
+```bash
+prompter --version
+```
+
+## Setup
+
+Create your config and template directories:
+
+```bash
+mkdir -p ~/.config/prompter/prompts/{pre,post}
+```
+
+Create a config file at `~/.config/prompter/config.toml`:
+
+```toml title="config.toml"
+prompts_location = "~/.config/prompter/prompts"
+editor = "code"  # or vim, nvim, etc.
+target = "clipboard"
+```
+
+## Quick Start
+
+Generate a simple prompt:
+
+```bash
+prompter "How do I implement JWT authentication in Go?"
+```
+
+Use templates for consistent prompts:
+
+```bash
+# Create a question template
+prompter add --pre question
+
+# Use it
+prompter --pre question "How does OAuth work?"
+```
+
+Include project context:
+
+```bash
+# Include files
+prompter --file main.go "Review this code"
+
+# Include directory structure
+prompter --directory "Explain this project"
+```
+
+Debug with fix mode:
+
+```bash
+go test ./... 2>&1 | prompter --fix "Help me fix these tests"
+```
+
+## Next Steps
+
+- [Usage Guide](/usage/) - Learn core features and workflows
+- [Configuration](/configuration/) - Customize Prompter for your needs
+- [Reference](/reference/) - Quick lookup for flags, variables, and commands

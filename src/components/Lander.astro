@@ -1,0 +1,1177 @@
+---
+import { Image } from 'astro:assets';
+import config from "virtual:starlight/user-config";
+import type { Props } from '@astrojs/starlight/props';
+
+import CopyIcon from "../assets/lander/copy.svg";
+import CheckIcon from "../assets/lander/check.svg";
+
+const entry = Astro.locals.starlightRoute?.entry;
+const data = entry?.data;
+const { title = data?.title, tagline, image, actions = [] } = data?.hero || {};
+
+const imageAttrs = {
+    loading: 'eager' as const,
+    decoding: 'async' as const,
+    width: 64,
+    alt: image?.alt || '',
+};
+
+const github = config.social.filter(s => s.icon === 'github')[0];
+
+let darkImage: ImageMetadata | undefined;
+let lightImage: ImageMetadata | undefined;
+let rawHtml: string | undefined;
+if (image) {
+    if ('file' in image) {
+        darkImage = image.file;
+    } else if ('dark' in image) {
+        darkImage = image.dark;
+        lightImage = image.light;
+    } else {
+        rawHtml = image.html;
+  }
+}
+
+const features = [
+  {
+    emoji: '🧰',
+    title: 'Prompt Toolbox',
+    description: 'A complete toolkit for any AI agent. Combine base prompts with pre/post templates and rich context.',
+  },
+  {
+    emoji: '⚡',
+    title: 'Blazing Fast',
+    description: 'Built with Go and Cobra for maximum performance. Sub-millisecond prompt assembly.',
+  },
+  {
+    emoji: '💻',
+    title: 'Open Source',
+    description: 'MIT licensed and community-driven. Contribute, customize, and make it your own.',
+  },
+  {
+    emoji: '📑',
+    title: 'Template System',
+    description: 'Organize prompts with pre/post templates. Support for local and global template directories.',
+  },
+  {
+    emoji: '🌳',
+    title: 'Context Aware',
+    description: 'Automatically include git info, directory structure, and file contents in your prompts.',
+  },
+  {
+    emoji: '🔧',
+    title: 'Fix Mode',
+    description: 'Capture command output and generate debugging prompts. Perfect for CI/CD workflows.',
+  },
+];
+
+const quickStartSteps = [
+  {
+    step: '01',
+    title: 'Install',
+    code: 'brew install imdevan/prompter/prompter',
+  },
+  {
+    step: '02',
+    title: 'Configure',
+    code: 'mkdir -p ~/.config/prompter/prompts/{pre,post}',
+  },
+  {
+    step: '03',
+    title: 'Use',
+    code: 'prompter "How do I implement auth?"',
+  },
+];
+---
+<div class="hero">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-background">
+        <div class="floating-box floating-box-1"></div>
+        <div class="floating-box floating-box-2"></div>
+      </div>
+      
+      <div class="container">
+        <div class="hero-content">
+        <div class="hero-logo">
+          {darkImage && (
+            <div class="logo-icon">
+              <Image
+                src={darkImage}
+                {...imageAttrs}
+                class:list={{ 'light:sl-hidden': Boolean(lightImage) }}
+              />
+              {lightImage && <Image src={lightImage} {...imageAttrs} class="dark:sl-hidden" />}
+            </div>
+          )}
+          <h1 class="hero-title">prompter</h1>
+          <p class="hero-subtitle">
+            A prompt toolbox for <span class="highlight-text">any</span> AI agent
+          </p>
+        </div>
+
+        <p class="hero-description">
+          Assemble high-quality prompts by combining templates, context, and captured output. 
+          Blazing fast. Highly customizable. Works everywhere.
+        </p>
+
+        <div class="hero-cta">
+          <a href="/intro" class="btn-primary">
+            Get Started →
+          </a>
+          <a href={github.href} target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+            View on GitHub
+          </a>
+        </div>
+
+        <!-- <button class="scroll-indicator" onclick="document.getElementById('demo').scrollIntoView({ behavior: 'smooth' })"> -->
+        <!--   <span class="scroll-text">Watch Demo</span> -->
+        <!--   <svg class="scroll-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> -->
+        <!--     <polyline points="6 9 12 15 18 9"></polyline> -->
+        <!--   </svg> -->
+        <!-- </button> -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Showcase Section -->
+    <section id="demo" class="showcase-section">
+      <div class="container">
+        <div class="section-header">
+        <h2>See it in action</h2>
+        <p>From simple prompts to complex workflows, prompter adapts to your needs.</p>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-buttons">
+            <div class="terminal-button terminal-button-red"></div>
+            <div class="terminal-button terminal-button-yellow"></div>
+            <div class="terminal-button terminal-button-green"></div>
+          </div>
+          <span class="terminal-title">terminal — prompter</span>
+        </div>
+
+        <div class="terminal-tabs">
+          <button class="terminal-tab active" data-tab="basic">Basic usage</button>
+          <button class="terminal-tab" data-tab="fix">Bug fixes</button>
+          <button class="terminal-tab" data-tab="help">Highly customizable</button>
+        </div>
+
+        <div class="terminal-content">
+          <pre class="terminal-code active" data-content="basic"><code><span class="comment"># Simple prompt generation</span>
+prompter <span class="string">'my prompt'</span> 
+<span class="comment">...</span>
+<span class="prompt">? Select a pre-template (prepended to prompt):</span>  [Use arrows to move, type to filter, ? for more help]
+<span class="selected">> None</span>
+  question</code></pre>
+
+          <pre class="terminal-code" data-content="fix"><code><span class="comment"># Re-run failing command with AI assistance</span>
+prompter <span class="flag">--fix</span>
+Re-running last command: bun test
+<span class="success">Prompt copied to clipboard</span></code></pre>
+
+          <pre class="terminal-code" data-content="help"><code><span class="comment"># Full CLI reference</span>
+prompter help
+<span class="comment">...</span>
+<span class="header">Usage:</span>
+  prompter [base-prompt] [flags]
+  prompter [command]
+
+<span class="header">Available Commands:</span>
+  add         Add a new prompt template
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  list        List available prompt templates
+  prompts     Open prompts directory in editor
+  version     Print version information
+
+<span class="header">Flags:</span>
+  <span class="flag">-b, --clipboard</span>         append clipboard content to prompt
+  <span class="flag">-c, --config string</span>     config file path (default ~/.config/prompter/config.toml)
+  <span class="flag">-d, --directory</span>         include current directory
+  <span class="flag">-e, --editor string</span>     editor to open prompt in
+      <span class="flag">--file strings</span>      files to include
+  <span class="flag">-f, --fix</span>               fix mode - process captured command output
+  <span class="flag">-h, --help</span>              help for prompter
+  <span class="flag">-i, --interactive</span>       force interactive mode
+  <span class="flag">-n, --numbers</span>           enable number key selection for templates
+  <span class="flag">-o, --post string</span>       post-template name
+  <span class="flag">-p, --pre string</span>        pre-template name
+  <span class="flag">-t, --target string</span>     output target (clipboard, stdout, file:/path)
+  <span class="flag">-v, --version</span>           print version information
+  <span class="flag">-y, --yes</span>               noninteractive mode - use defaults</code></pre>
+        </div>
+      </div>
+
+      <div class="install-command">
+        <p class="install-label">Quick install:</p>
+        <button class="command-box" data-command="brew install imdevan/prompter/prompter">
+          <code>brew install imdevan/prompter/prompter</code>
+          <span class="copy-btn">
+            <CopyIcon />
+            <CheckIcon />
+          </span>
+        </button>
+      </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-header">
+        <h2>Everything you need</h2>
+        <p>Prompter gives you the building blocks to craft perfect prompts for any AI workflow.</p>
+      </div>
+
+      <div class="features-grid">
+        {features.map((feature) => (
+          <div class="feature-card">
+            <div class="feature-icon">{feature.emoji}</div>
+            <div class="feature-content">
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section class="quickstart-section">
+      <div class="container">
+        <div class="section-header">
+        <h2>Get started in seconds</h2>
+        <p>Three commands and you're ready to supercharge your AI workflow.</p>
+      </div>
+
+      <div class="quickstart-steps">
+        {quickStartSteps.map((step) => (
+          <div class="quickstart-step">
+            <div class="step-number">{step.step}</div>
+            <div class="step-content">
+              <h3>{step.title}</h3>
+              <button class="step-command" data-command={step.code}>
+                <span class="command-prompt">$</span>
+                <code>{step.code}</code>
+                <span class="copy-btn">
+                  <CopyIcon />
+                  <CheckIcon />
+                </span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="quickstart-cta">
+        <a href="/intro#install" class="btn-primary">
+          Full Installation Guide →
+        </a>
+      </div>
+      </div>
+    </section>
+
+    <!-- Footer Section -->
+    <section class="footer-section">
+      <div class="container">
+        <div class="footer-content">
+        <div class="footer-brand">
+          {darkImage && (
+            <div class="footer-logo">
+              <Image
+                src={darkImage}
+                {...imageAttrs}
+                class:list={{ 'light:sl-hidden': Boolean(lightImage) }}
+              />
+              {lightImage && <Image src={lightImage} {...imageAttrs} class="dark:sl-hidden" />}
+            </div>
+          )}
+          <span class="footer-title">prompter</span>
+        </div>
+        <p class="footer-description">
+          A prompt toolbox for any AI agent. Open source and built with Go.
+        </p>
+        <div class="footer-links">
+          <a href={github.href} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <span class="footer-separator">•</span>
+          <a href="/docs">Documentation</a>
+          <span class="footer-separator">•</span>
+          <span class="footer-copyright">© {new Date().getFullYear()} Prompter. MIT License.</span>
+        </div>
+      </div>
+      </div>
+    </section>
+</div>
+
+<style>
+.hero {
+  --padding: 3rem;
+  --vertical-padding: 1.5rem;
+  --heading-font-size: var(--sl-text-3xl);
+
+  margin: 0;
+  border: none;
+  width: 100%;
+  max-width: 100%;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Container for max-width constraint */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--padding);
+  width: 100%;
+}
+
+@media (max-width: 30rem) {
+  .hero {
+    --padding: 1rem;
+    --vertical-padding: 0.75rem;
+    --heading-font-size: var(--sl-text-2xl);
+    margin: 0.5rem;
+  }
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+}
+
+.hero-background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--color-text) 2px,
+    var(--color-text) 4px
+  );
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.floating-box {
+  position: absolute;
+  border: 2px solid var(--color-primary);
+  background: var(--color-primary);
+  opacity: 0.1;
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-box-1 {
+  top: 20%;
+  left: 10%;
+  width: 8rem;
+  height: 6rem;
+  animation-delay: 0s;
+}
+
+.floating-box-2 {
+  bottom: 32%;
+  right: 16%;
+  width: 10rem;
+  height: 7rem;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+  .floating-box {
+    display: none;
+  }
+}
+
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-background-weak);
+  border: 2px solid var(--color-border);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.badge-text {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-weak);
+}
+
+.badge-separator {
+  color: var(--color-text-weak);
+}
+
+.hero-logo {
+  margin-bottom: 1.5rem;
+}
+
+.logo-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background: var(--color-primary);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-hard);
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 8rem;
+  /* font-size: clamp(4rem, 10vw, 8rem); */
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0;
+  color: var(--color-text-strong);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: var(--color-text-weak);
+  font-weight: 300;
+  margin: 0;
+}
+
+.highlight-text {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.hero-description {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-weak);
+  max-width: 32rem;
+  margin: 2.5rem auto;
+  line-height: 1.6;
+}
+
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 640px) {
+  .hero-cta {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  /* color: var(--color-primary-foreground); */
+  color: var(--color-primary-foreground) !important;
+  background: var(--color-primary);
+  border: 2px solid var(--color-border);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-hard);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+  border: 2px solid var(--color-border);
+  background: transparent;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-hard);
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard-lg);
+}
+
+.btn-primary:hover,
+a:not([aria-current="page"]).btn-primary:hover {
+  color: var(--color-primary-foreground) !important;
+}
+
+.btn-secondary:hover {
+  color: var(--color-text-strong) !important;
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.scroll-indicator {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--color-text-weak);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.scroll-indicator:hover {
+  color: var(--color-text-strong);
+}
+
+.scroll-text {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.scroll-arrow {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-10px);
+  }
+  70% {
+    transform: translateY(-5px);
+  }
+  90% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Showcase Section */
+.showcase-section {
+  padding: 6rem 0;
+  background: var(--color-background-weak);
+  border-top: 2px solid var(--color-border);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: var(--color-text-strong);
+}
+
+.section-header p {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-weak);
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.terminal-window {
+  background: var(--code-bg);
+  border: 2px solid var(--code-border);
+  box-shadow: var(--shadow-hard-lg);
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: hsl(220, 20%, 10%);
+  border-bottom: 2px solid var(--code-border);
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminal-button {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid hsl(220, 20%, 20%);
+  border-radius: 50%;
+}
+
+.terminal-button-red {
+  background: hsl(0, 72%, 51%);
+}
+
+.terminal-button-yellow {
+  background: hsl(45, 90%, 65%);
+}
+
+.terminal-button-green {
+  background: hsl(142, 60%, 35%);
+}
+
+.terminal-title {
+  font-size: 0.75rem;
+  color: hsl(48, 40%, 92%);
+  font-family: 'Fira Code', monospace;
+}
+
+.terminal-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--code-border);
+  background: hsl(220, 20%, 10%);
+}
+
+.terminal-tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-family: 'Fira Code', monospace;
+  background: none;
+  border: none;
+  border-right: 2px solid var(--code-border);
+  color: hsl(48, 40%, 70%);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.terminal-tab:last-child {
+  border-right: none;
+}
+
+.terminal-tab:hover {
+  color: hsl(48, 40%, 92%);
+  background: hsl(220, 20%, 15%);
+}
+
+.terminal-tab.active {
+  background: var(--code-bg);
+  color: var(--color-text-strong);
+}
+
+.terminal-content {
+  position: relative;
+}
+
+.terminal-code {
+  display: none;
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  min-height: 18rem;
+  max-height: 31.25rem;
+  overflow: auto;
+}
+
+.terminal-code.active {
+  display: block;
+}
+
+/* Terminal syntax highlighting */
+.terminal-code .comment {
+  color: var(--color-text-weak);
+  opacity: 0.7;
+}
+
+.terminal-code .string {
+  color: var(--color-primary);
+}
+
+.terminal-code .flag {
+  color: var(--color-accent);
+}
+
+.terminal-code .prompt {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.terminal-code .selected {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.terminal-code .success {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.terminal-code .header {
+  color: var(--color-text-strong);
+  font-weight: 600;
+}
+
+.install-command {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.install-label {
+  font-size: 0.875rem;
+  color: var(--color-text-weak);
+  margin-bottom: 0.75rem;
+}
+
+.command-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-background);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-hard-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.command-box:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard-lg);
+}
+
+.command-box code {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.875rem;
+  color: var(--code-text);
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-weak);
+}
+
+.copy-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.copy-btn svg:last-child {
+  display: none;
+}
+
+.command-box.success .copy-btn svg:first-child {
+  display: none;
+}
+
+.command-box.success .copy-btn svg:last-child {
+  display: block;
+  color: var(--color-primary);
+}
+
+.step-command.success .copy-btn svg:first-child {
+  display: none;
+}
+
+.step-command.success .copy-btn svg:last-child {
+  display: block;
+  color: var(--color-primary);
+}
+
+/* Features Section */
+.features-section {
+  padding: 6rem 0;
+  border-top: 2px solid var(--color-border);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--color-background);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-hard);
+  transition: all 0.2s ease;
+}
+
+/* .feature-card:hover { */
+/*   transform: translate(-2px, -2px); */
+/*   box-shadow: var(--shadow-hard-lg); */
+/* } */
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  /* background: var(--color-primary); */
+  /* background-opacity: 0.1; */
+  /* border: 2px solid var(--color-primary); */
+  /* border-opacity: 0.3; */
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.feature-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-strong);
+}
+
+.feature-content p {
+  font-size: 0.875rem;
+  color: var(--color-text-weak);
+  line-height: 1.5;
+}
+
+/* Quick Start Section */
+.quickstart-section {
+  padding: 6rem 0;
+  background: var(--color-background);
+  border-top: 2px solid var(--color-border);
+}
+
+.quickstart-steps {
+  margin: 0 auto 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quickstart-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-weight: bold;
+  font-size: 1.125rem;
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-hard-sm);
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content h3 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-strong);
+}
+
+.step-command {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--code-bg);
+  border: 2px solid var(--code-border);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-hard) !important;
+}
+
+.step-command:hover {
+  transform: translate(0px) !important;
+  box-shadow: var(--shadow-hard) !important;
+}
+
+.command-prompt {
+  color: var(--color-text-weak);
+}
+
+.step-command code {
+  flex: 1;
+  color: var(--code-text);
+}
+
+.quickstart-cta {
+  text-align: center;
+}
+
+.btn-retro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+  background: var(--color-primary);
+  border: 2px solid var(--color-border);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-hard);
+}
+
+.btn-retro:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard-lg);
+  color: var(--color-text-strong) !important;
+}
+
+.btn-retro:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* Footer Section */
+.footer-section {
+  padding: 3rem 0;
+  background: var(--color-background);
+  border-top: 2px solid var(--color-border);
+}
+
+.footer-content {
+  text-align: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer-logo {
+  width: 2rem;
+  height: 2rem;
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.footer-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--color-text-strong);
+}
+
+.footer-description {
+  font-size: 0.875rem;
+  color: var(--color-text-weak);
+  margin-bottom: 1.5rem;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+}
+
+.footer-links a {
+  color: var(--color-text-weak);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover {
+  color: var(--color-primary);
+}
+
+.footer-separator {
+  color: var(--color-text-weak);
+}
+
+.footer-copyright {
+  color: var(--color-text-weak);
+}
+
+@media (max-width: 768px) {
+  .quickstart-step {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .step-number {
+    align-self: flex-start;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-separator {
+    display: none;
+  }
+}
+</style>
+
+<style is:global>
+:root[data-has-hero] {
+  header.header {
+    display: none !important;
+  }
+  .page {
+    max-width: 100% !important;
+  }
+  .main-frame {
+    padding-top: 0 !important;
+    max-width: 100% !important;
+  }
+  .main-frame .sidebar {
+    display: none !important;
+  }
+  .main-frame .main-pane {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+  .main-frame .main-pane > main {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+  main > .content-panel {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    border: none !important;
+  }
+  main > .content-panel .sl-markdown-content {
+    display: none !important;
+  }
+  .page-frame {
+    max-width: 100% !important;
+  }
+  body {
+    overflow-x: hidden;
+  }
+}
+</style>
+
+<script>
+  // Copy to clipboard functionality
+  const copyButtons = document.querySelectorAll("button[data-command], .command-box, .step-command") as NodeListOf<HTMLButtonElement>;
+
+  copyButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const command = button.dataset.command || button.querySelector('code')?.textContent;
+      if (command) {
+        navigator.clipboard.writeText(command);
+        button.classList.add("success");
+        setTimeout(() => {
+          button.classList.remove("success");
+        }, 1500);
+      }
+    });
+  });
+
+  // Terminal tabs functionality
+  const terminalTabs = document.querySelectorAll('.terminal-tab') as NodeListOf<HTMLButtonElement>;
+  const terminalCodes = document.querySelectorAll('.terminal-code') as NodeListOf<HTMLElement>;
+
+  terminalTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tabName = tab.dataset.tab;
+      
+      // Remove active class from all tabs and codes
+      terminalTabs.forEach(t => t.classList.remove('active'));
+      terminalCodes.forEach(c => c.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      tab.classList.add('active');
+      
+      // Show corresponding code block
+      const targetCode = document.querySelector(`[data-content="${tabName}"]`);
+      if (targetCode) {
+        targetCode.classList.add('active');
+      }
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // Add animation on scroll for feature cards
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  // Observe feature cards for animation
+  document.querySelectorAll('.feature-card, .quickstart-step').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+  });
+</script>

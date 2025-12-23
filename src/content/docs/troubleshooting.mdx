@@ -1,0 +1,99 @@
+---
+title: Troubleshooting
+description: Common issues and solutions for Prompter CLI
+---
+
+## Installation Issues
+
+### Binary Not Found
+```bash
+# Check if binary exists and is in PATH
+which prompter
+./prompter --version
+```
+
+## Configuration Issues
+
+### Config File Not Found
+```bash
+# Check default locations
+ls ~/.config/prompter/config.toml
+
+# Create config directory
+mkdir -p ~/.config/prompter
+cp example-config.toml ~/.config/prompter/config.toml
+```
+
+### TOML Syntax Errors
+```toml
+# ❌ Missing quotes
+prompts_location = ~/prompts
+
+# ✅ Correct
+prompts_location = "~/prompts"
+```
+
+## Template Issues
+
+### Templates Not Found
+```bash
+# Check template locations
+prompter list
+
+# Verify directories exist
+ls ~/.config/prompter/prompts/pre/
+```
+
+### Template Syntax Errors
+```markdown
+<!-- ❌ Invalid -->
+{{ .Prompt | invalid_function }}
+
+<!-- ✅ Valid -->
+{{ .Prompt | truncate 50 }}
+```
+
+## Fix Mode Issues
+
+### Not Capturing Output
+```bash
+# ❌ Only captures stdout
+failing-command | prompter --fix
+
+# ✅ Captures both stdout and stderr
+failing-command 2>&1 | prompter --fix
+```
+
+## Clipboard Issues
+
+### Linux
+```bash
+# Install clipboard utility
+sudo apt-get install xclip
+```
+
+### Alternative Output
+```bash
+prompter --target stdout "test prompt"
+```
+
+## Permission Issues
+
+```bash
+# Fix permissions
+chmod 755 ~/.config/prompter/
+chmod -R 644 ~/.config/prompter/prompts/
+```
+
+## Quick Diagnostic
+
+```bash
+# Check version
+prompter --version
+
+# Test configuration
+prompter list
+
+# Test template
+prompter --target stdout --pre question "test"
+```

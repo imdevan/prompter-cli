@@ -1,0 +1,52 @@
+---
+title: Local Templates
+description: Project-specific templates in your working directory
+---
+
+Local templates are project-specific and automatically available when working in that directory.
+
+## Default Location
+
+```
+./prompts/
+├── pre/
+├── post/
+└── fix.md
+```
+
+## Custom Location
+
+```toml
+local_prompts_location = "my-prompts"
+```
+
+## Priority
+
+Local templates take priority over global templates with the same name:
+
+1. Local templates (highest)
+2. Custom template locations
+3. Global templates (lowest)
+
+## Setup
+
+```bash
+mkdir -p prompts/{pre,post}
+echo "# Project Context\n{{ .Prompt }}" > prompts/pre/context.md
+```
+
+## Usage
+
+```bash
+prompter list  # Shows local templates marked as (local)
+prompter --pre context "My prompt"
+```
+
+## Version Control
+
+Include in your repository for team sharing:
+
+```bash
+git add prompts/
+git commit -m "Add project templates"
+```

@@ -1,0 +1,67 @@
+---
+title: Template Variables Reference
+description: All available template variables and functions
+---
+
+## Core Variables
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `{{ .Prompt }}` | string | Base prompt text |
+| `{{ .Now }}` | time.Time | Current timestamp |
+| `{{ .CWD }}` | string | Current working directory |
+
+## Git Variables
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `{{ .Git.Root }}` | string | Repository root |
+| `{{ .Git.Branch }}` | string | Current branch |
+| `{{ .Git.Commit }}` | string | Commit hash |
+| `{{ .Git.Dirty }}` | bool | Has uncommitted changes |
+
+## Fix Mode Variables
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `{{ .Fix.Enabled }}` | bool | Fix mode active |
+| `{{ .Fix.Command }}` | string | Failed command |
+| `{{ .Fix.Output }}` | string | Command output |
+
+## Other Variables
+
+| Variable | Description |
+|----------|-------------|
+| `{{ .Env.VAR }}` | Environment variable |
+| `{{ .Config.Editor }}` | Config values |
+
+## Functions
+
+```markdown
+# String manipulation
+{{ .Prompt | truncate 50 }}
+{{ .Text | indent 4 }}
+{{ .CWD | base }}
+{{ .Text | upper }}
+{{ .Text | lower }}
+
+# Code fence
+{{ mdFence "go" .Code }}
+
+# Date formatting
+{{ .Now.Format "2006-01-02" }}
+
+# Defaults
+{{ .Env.USER | default "unknown" }}
+```
+
+## Control Structures
+
+```markdown
+# Conditionals
+{{- if .Git.Root }}...{{- end }}
+{{- if and .Git.Root .Git.Branch }}...{{- end }}
+
+# With (safe access)
+{{- with .Git.Branch }}{{ . }}{{- end }}
+```

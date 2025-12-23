@@ -1,0 +1,21 @@
+---
+import Default from '@astrojs/starlight/components/Hero.astro';
+import Lander from './Lander.astro';
+
+const entry = Astro.locals.starlightRoute?.entry;
+const slug = entry?.slug ?? "";
+const pathname = Astro.url.pathname;
+// Check if this is the index page - slug should be empty string for index.mdx
+const isIndexPage = slug === "";
+
+// Debug logging (remove in production)
+if (import.meta.env.DEV) {
+  console.log('[Hero] slug:', slug, 'pathname:', pathname, 'isIndexPage:', isIndexPage);
+}
+---
+
+{isIndexPage ? (
+  <Lander {...Astro.props} />
+) : (
+  <Default {...Astro.props}><slot /></Default>
+)}

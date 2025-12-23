@@ -1,0 +1,46 @@
+---
+title: prompter add
+description: Create new prompt templates
+---
+
+Create new prompt templates interactively or from content.
+
+## Usage
+
+```bash
+# Interactive mode
+prompter add
+
+# Create pre-template
+prompter add --pre template-name "Template content"
+
+# Create post-template
+prompter add --post template-name "Template content"
+
+# From clipboard
+prompter add --pre template-name --clipboard
+
+# Overwrite existing
+prompter add --pre template-name --overwrite "New content"
+```
+
+## Flags
+
+| Flag | Description |
+|------|-------------|
+| `--pre` | Create a pre-template |
+| `--post` | Create a post-template |
+| `--clipboard` | Use clipboard content |
+| `--overwrite` | Overwrite existing template |
+
+## Example
+
+```bash
+prompter add --pre question "# Question
+
+{{ .Prompt }}
+
+Please provide a clear answer."
+```
+
+Templates are saved to `~/.config/prompter/prompts/pre/` or `post/` as `.md` files.

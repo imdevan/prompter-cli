@@ -1,0 +1,83 @@
+---
+title: Template Syntax
+description: Template variables, functions, and syntax
+---
+
+Prompter uses Go's template engine with additional helper functions.
+
+## Core Variables
+
+| Variable | Description |
+|----------|-------------|
+| `{{ .Prompt }}` | Base prompt text |
+| `{{ .Now }}` | Current timestamp |
+| `{{ .CWD }}` | Current working directory |
+
+## Git Variables
+
+```markdown
+{{- if .Git.Root }}
+Repository: {{ .Git.Root | base }}
+Branch: {{ .Git.Branch }}
+Commit: {{ .Git.Commit | truncate 8 }}
+{{- if .Git.Dirty }}⚠️ Uncommitted changes{{- end }}
+{{- end }}
+```
+
+## Fix Mode Variables
+
+```markdown
+{{- if .Fix.Enabled }}
+Command: {{ .Fix.Command }}
+Output: {{ .Fix.Output }}
+{{- end }}
+```
+
+## Environment & Config
+
+```markdown
+User: {{ .Env.USER }}
+Editor: {{ .Config.Editor }}
+```
+
+## Functions
+
+```markdown
+# String manipulation
+{{ .Prompt | truncate 50 }}
+{{ .Text | indent 4 }}
+{{ .CWD | base }}
+
+# Code fence
+{{ mdFence "go" .Code }}
+
+# Date formatting
+{{ .Now.Format "2006-01-02 15:04:05" }}
+```
+
+## Control Structures
+
+```markdown
+{{- if .Git.Root }}
+In git repo
+{{- else }}
+Not in git repo
+{{- end }}
+
+{{- with .Git.Branch }}
+Branch: {{ . }}
+{{- end }}
+```
+
+## Example Template
+
+```markdown
+# {{ .CWD | base | title }}
+
+{{- if .Git.Branch }}
+Branch: {{ .Git.Branch }}
+{{- end }}
+
+## Request
+{{ .Prompt }}
+```

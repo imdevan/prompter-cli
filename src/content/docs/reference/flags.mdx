@@ -1,0 +1,54 @@
+---
+title: Command Line Flags
+description: Complete reference of all CLI flags
+---
+
+## Core Flags
+
+| Flag | Description |
+|------|-------------|
+| `-p, --pre <name>` | Use pre-template |
+| `-o, --post <name>` | Use post-template |
+| `-f, --fix` | Enable fix mode |
+| `--fix-file <path>` | Specify fix mode input file |
+| `-i, --interactive` | Force interactive mode |
+| `-y, --yes` | Force non-interactive mode |
+| `-n, --numbers` | Number key selection in interactive mode |
+
+## Content Flags
+
+| Flag | Description |
+|------|-------------|
+| `--file <path>` | Include file content (repeatable) |
+| `-d, --directory` | Include directory structure |
+| `-b, --clipboard` | Include clipboard content |
+
+## Output Flags
+
+| Flag | Description |
+|------|-------------|
+| `-t, --target <dest>` | Output: `clipboard`, `stdout`, `file:/path` |
+| `-e, --editor <cmd>` | Open in editor |
+
+## Other Flags
+
+| Flag | Description |
+|------|-------------|
+| `-c, --config <path>` | Custom config file |
+| `-v, --version` | Show version |
+
+## Examples
+
+```bash
+# Basic usage
+prompter --pre question "How does JWT work?"
+
+# Multiple files
+prompter --file main.go --file config.go "Review these"
+
+# Fix mode
+go test 2>&1 | prompter --fix --pre debug
+
+# Output to terminal
+prompter --target stdout "My prompt"
+```
