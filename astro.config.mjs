@@ -2,7 +2,6 @@
 import { defineConfig } from "astro/config"
 import starlight from "@astrojs/starlight"
 import solidJs from "@astrojs/solid-js"
-import cloudflare from "@astrojs/cloudflare"
 import config from "./config.mjs"
 import { rehypeHeadingIds } from "@astrojs/markdown-remark"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
@@ -11,11 +10,8 @@ import { spawnSync } from "child_process"
 // https://astro.build/config
 export default defineConfig({
   site: config.url,
-  base: "/",
-  output: "server",
-  adapter: cloudflare({
-    imageService: "passthrough",
-  }),
+  base: process.env.SST_STAGE === "production" ? "/prompter-cli" : "/",
+  output: "static",
   devToolbar: {
     enabled: false,
   },
@@ -100,7 +96,7 @@ function configSchema() {
     hooks: {
       "astro:build:done": async () => {
         console.log("generating config schema")
-        spawnSync(["./dist/config.json"])
+        spawnSync("node", ["./dist/config.json"])
       },
     },
   }
