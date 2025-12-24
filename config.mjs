@@ -1,5 +1,6 @@
 
 const stage = process.env.SST_STAGE || "dev"
+const basePath = stage === "production" ? "/prompter-cli" : ""
 
 export default {
   url: stage === "production" ? "https://devan.gg/prompter-cli" : "http://localhost:4321",
@@ -8,7 +9,7 @@ export default {
   github: "https://github.com/imdevan/prompter",
   githubDocs: "https://github.com/imdevan/prompter-cli",
   headerLinks: [
-    { name: "Home", url: "/" },
-    { name: "Docs", url: "/docs/" },
+    { name: "Home", url: `${basePath}/` },
+    { name: "Docs", url: `${basePath}/intro/` },
   ],
 }
