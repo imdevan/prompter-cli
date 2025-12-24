@@ -19,6 +19,10 @@ const imageAttrs = {
 
 const github = config.social.filter(s => s.icon === 'github')[0];
 
+// Use /prompter-cli/ prefix in production (when SST_STAGE is not 'dev')
+const isProduction = import.meta.env.SST_STAGE !== 'dev';
+const urlPrefix = isProduction ? '/prompter-cli' : '';
+
 let darkImage: ImageMetadata | undefined;
 let lightImage: ImageMetadata | undefined;
 let rawHtml: string | undefined;
@@ -117,7 +121,7 @@ const quickStartSteps = [
         </p>
 
         <div class="hero-cta">
-          <a href="/intro" class="btn-primary">
+          <a href={`${urlPrefix}/intro`} class="btn-primary">
             Get Started →
           </a>
           <a href={github.href} target="_blank" rel="noopener noreferrer" class="btn-secondary">
@@ -271,7 +275,7 @@ prompter help
       </div>
 
       <div class="quickstart-cta">
-        <a href="/intro#install" class="btn-primary">
+        <a href={`${urlPrefix}/intro#install`} class="btn-primary">
           Full Installation Guide →
         </a>
       </div>
@@ -301,7 +305,7 @@ prompter help
         <div class="footer-links">
           <a href={github.href} target="_blank" rel="noopener noreferrer">GitHub</a>
           <span class="footer-separator">•</span>
-          <a href="/docs">Documentation</a>
+          <a href={`${urlPrefix}/intro`}>Documentation</a>
           <span class="footer-separator">•</span>
           <span class="footer-copyright">© {new Date().getFullYear()} Prompter. MIT License.</span>
         </div>
