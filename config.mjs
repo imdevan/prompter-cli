@@ -10,6 +10,6 @@ export default {
   githubDocs: "https://github.com/imdevan/prompter-cli",
   headerLinks: [
     { name: "Home", url: `${basePath}/` },
-    { name: "Docs", url: `${basePath}/intro/` },
+    { name: "Docs", url: `${basePath}/intro` },
   ],
 }
