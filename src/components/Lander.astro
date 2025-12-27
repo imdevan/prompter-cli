@@ -19,8 +19,8 @@ const imageAttrs = {
 
 const github = config.social.filter(s => s.icon === 'github')[0];
 
-// Use /prompter-cli/ prefix in production (when SST_STAGE is not 'dev')
-const isProduction = import.meta.env.SST_STAGE !== 'dev';
+// Use /prompter-cli/ prefix in production
+const isProduction = import.meta.env.SST_STAGE === 'production';
 const urlPrefix = isProduction ? '/prompter-cli' : '';
 
 let darkImage: ImageMetadata | undefined;
