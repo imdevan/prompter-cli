@@ -14,6 +14,8 @@ const {
 } = Astro.locals.starlightRoute;
 const isDocs = slug.startsWith("docs")
 const isIndexPage = slug === "";
+const isProduction = import.meta.env.SST_STAGE === 'production';
+const isLanderOrDocs = isIndexPage || isDocs;
 
 let encodedTitle = '';
 let ogImage = undefined;
@@ -43,6 +45,10 @@ if (isDocs) {
 )}
 
 <Default {...Astro.props}><slot /></Default>
+
+{isProduction && isLanderOrDocs && (
+  <link rel="icon" type="image/png" href="/compy-guy.png" />
+)}
 
 <!-- Preload Google Fonts for better performance -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
