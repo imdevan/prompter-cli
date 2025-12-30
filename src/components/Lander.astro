@@ -693,19 +693,23 @@ a:not([aria-current="page"]).btn-primary:hover {
 
 .terminal-tab.active {
   background: var(--code-bg);
-  color: var(--color-text-strong);
+  /* color: var(--color-text-strong); */
 }
 
 .terminal-content {
   position: relative;
 }
 
+.terminal-code,
+.terminal-code > code {
+    color: var(--code-text) !important;
+}
 .terminal-code {
   display: none;
   margin: 0;
   padding: 1.5rem;
   background: var(--code-bg);
-  color: var(--code-text);
+
   font-family: 'Fira Code', monospace;
   font-size: 0.875rem;
   line-height: 1.6;
@@ -768,11 +772,13 @@ a:not([aria-current="page"]).btn-primary:hover {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background: var(--color-background);
-  border: 2px solid var(--color-border);
-  box-shadow: var(--shadow-hard-sm);
+  background: var(--code-bg) !important;
+  border: 2px solid var(--code-border) !important;
+  color: var(--code-text);
+  box-shadow: var(--shadow-hard-md);
   cursor: pointer;
   transition: all 0.15s ease;
+  border-radius: 0 !important;
 }
 
 .command-box:hover {

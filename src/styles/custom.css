@@ -114,6 +114,7 @@ code, pre,
 
   --code-border: hsl(142, 70%, 45%);
   --code-text: hsl(220, 20%, 20%);
+  --code-text: hsl(48, 40%, 96%);
 
   /* For the share component */
   --sl-color-bg-surface: var(--sl-color-bg-nav);
@@ -175,8 +176,10 @@ body {
     /* Code block colors - Synthwave 84 inspired */
     /* --code-bg: hsl(260, 30%, 12%); */
     --code-bg: hsl(0, 0%, 3.9%);
-    --code-border: hsl(142, 80%, 55%);
-    --code-text: hsl(48, 40%, 90%);
+    /* --code-border: hsl(142, 80%, 55%); */
+    /* --code-text: hsl(48, 40%, 90%); */
+    --code-border: hsl(142, 70%, 45%);
+    --code-text: hsl(220, 20%, 20%);
   }
 }
 
@@ -278,7 +281,7 @@ ul.top-level a[aria-current="page"] > span {
 }
 
 #starlight__sidebar {
-  background: var(--code-bg) !important;
+  background: var(--color-background) !important;
 }
 
 #starlight__sidebar ul li ul li {
@@ -450,8 +453,8 @@ ol {
 
 body > .page > header,
 :root[data-has-sidebar] body > .page > header {
-  /* background: var(--color-background) !important; */
-  background: var(--code-bg) !important;
+  background: var(--color-background) !important;
+  /* background: var(--code-bg) !important; */
   padding: 24px !important;
   border-bottom: 2px solid var(--color-border) !important;
   box-shadow: var(--shadow-hard-sm);
@@ -597,7 +600,7 @@ a:hover {
 }
 
 /* Buttons with hard shadows */
-button:not([data-open-modal]) {
+button:not([data-open-modal]):not('.command-box') {
   border: 2px solid var(--color-border) !important;
   border-radius: 0 !important;
   box-shadow: var(--shadow-hard-sm);
@@ -643,16 +646,18 @@ strong {
 
 /* Tabs with hard shadows */
 .sl-markdown-content .tab > [role="tab"] {
+  background: var(--color-background);
   border: 2px solid var(--color-border) !important;
   border-radius: 0 !important;
   box-shadow: var(--shadow-hard-sm);
   transition: all 0.15s ease;
 }
 
-.sl-markdown-content .tab > [role="tab"]:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hard);
-}
+/* commenting rather than removing for now */
+/* .sl-markdown-content .tab > [role="tab"]:hover { */
+/*   transform: translateY(-2px); */
+/*   box-shadow: var(--shadow-hard); */
+/* } */
 
 .sl-markdown-content .tab > [role="tab"][aria-selected="true"] {
   border-color: var(--color-primary) !important;
