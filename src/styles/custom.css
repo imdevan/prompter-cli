@@ -113,7 +113,7 @@ code, pre,
     --code-bg: hsl(0, 0%, 3.9%);
 
   --code-border: hsl(142, 70%, 45%);
-  --code-text: hsl(220, 20%, 20%);
+  /* --code-text: hsl(220, 20%, 20%); */
   --code-text: hsl(48, 40%, 96%);
 
   /* For the share component */
@@ -179,7 +179,8 @@ body {
     /* --code-border: hsl(142, 80%, 55%); */
     /* --code-text: hsl(48, 40%, 90%); */
     --code-border: hsl(142, 70%, 45%);
-    --code-text: hsl(220, 20%, 20%);
+    /* --code-text: hsl(220, 20%, 20%); */
+    --code-text: hsl(48, 40%, 96%);
   }
 }
 
