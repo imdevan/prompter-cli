@@ -49,9 +49,9 @@ const features = [
     description: 'Built with Go and Cobra for maximum performance. Sub-millisecond prompt assembly.',
   },
   {
-    emoji: '💻',
-    title: 'Open Source',
-    description: 'MIT licensed and community-driven. Contribute, customize, and make it your own.',
+    emoji: '🎨',
+    title: 'Highly Customizable',
+    description: 'Configure templates, context sources, and output targets to match your workflow perfectly.',
   },
   {
     emoji: '📑',
@@ -64,9 +64,9 @@ const features = [
     description: 'Automatically include git info, directory structure, and file contents in your prompts.',
   },
   {
-    emoji: '🔧',
-    title: 'Fix Mode',
-    description: 'Capture command output and generate debugging prompts. Perfect for CI/CD workflows.',
+    emoji: '🚀',
+    title: 'Any Skill Anywhere',
+    description: 'Use global skills, local skills, and agent templates seamlessly across all your projects.',
   },
 ];
 
@@ -147,7 +147,6 @@ const quickStartSteps = [
       <div class="container">
         <div class="section-header">
         <h2>See it in action</h2>
-        <p>From simple prompts to complex workflows, prompter adapts to your needs.</p>
       </div>
 
       <div class="terminal-window">
@@ -161,59 +160,110 @@ const quickStartSteps = [
         </div>
 
         <div class="terminal-tabs">
-          <button class="terminal-tab active" data-tab="basic">Basic usage</button>
+          <button class="terminal-tab active" data-tab="basic">Interactive</button>
           <button class="terminal-tab" data-tab="fix">Bug fixes</button>
-          <button class="terminal-tab" data-tab="help">Highly customizable</button>
+          <button class="terminal-tab" data-tab="help">Skills compatible</button>
         </div>
 
         <div class="terminal-content">
-          <pre class="terminal-code active" data-content="basic"><code><span class="comment"># Simple prompt generation</span>
-prompter <span class="string">'my prompt'</span> 
-<span class="comment">...</span>
-<span class="prompt">? Select a pre-template (prepended to prompt):</span>  [Use arrows to move, type to filter, ? for more help]
-  None
-<span class="selected">> Question</span>
-<span class="prompt">? Select a post-template (prepended to prompt):</span>  [Use arrows to move, type to filter, ? for more help]
-<span class="selected">> None</span>
-  strict validation</code></pre>
+          <pre class="terminal-code active" data-content="basic"><code> prompter
 
-          </code></pre>
+ Base prompt
+ Enter your base prompt
+ ╭─────────────────────────────────────────────────────╮
+ │ ┃ My prompt                                         │
+ │ ┃                                                   │
+ │ ┃                                                   │
+ ╰─────────────────────────────────────────────────────╯
+ Press Enter to continue. Alt+Enter for a new line.
 
-          <pre class="terminal-code" data-content="fix"><code><span class="comment"># Re-run failing command with AI assistance</span>
-prompter <span class="flag">--fix</span>
-Re-running last command: bun test
-<span class="success">Prompt copied to clipboard</span></code></pre>
+ ╭─────────────────────────────────────────────────────╮
+ │                                                     │
+ │  ╭──────────╮╭───────────────────╮╭─────────────╮   │
+ │  │ add-test ││ stick_to_the_plan ││ "My prompt" │   │
+ │  ╰──────────╯╰───────────────────╯╰─────────────╯   │
+ │                                                     │
+ │    Select templates                                 │
+ │                                                     │
+ │  │ [x] Add Test                                    │
+ │  │     Generate tests based on context              │
+ │                                                     │
+ │    [ ] Question                                    │
+ │        Do not generate code                         │
+ │                                                     │
+ │    [x] Next Task                                    │
+ │        Do the next task in plan.md, only.           │
+ │                                                     │
+ │    [ ] Keymap                                       │
+ │        Create nvim keymap                           │
+ │                                                     │
+ │                                                     │
+ │                                                     │
+ │                                                     │
+ │                                                     │
+ │                                                     │
+ │    ••                                               │
+ │                                                     │
+ │    󱁐 Toggle • 󰌑 Continue • / filter • ? more        │
+ │                                                     │
+ ╰─────────────────────────────────────────────────────╯
 
-          <pre class="terminal-code" data-content="help"><code><span class="comment"># Full CLI reference</span>
-prompter help
-<span class="comment">...</span>
-<span class="header">Usage:</span>
-  prompter [base-prompt] [flags]
-  prompter [command]
 
-<span class="header">Available Commands:</span>
-  add         Add a new prompt template
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  list        List available prompt templates
-  prompts     Open prompts directory in editor
-  version     Print version information
+ ╭─────────────────────────────╮
+ │                             │
+ │    Copied to clipboard  󱁖  │
+ │                             │
+ ╰─────────────────────────────╯
+</code></pre>
 
-<span class="header">Flags:</span>
-  <span class="flag">-b, --clipboard</span>         append clipboard content to prompt
-  <span class="flag">-c, --config string</span>     config file path (default ~/.config/prompter/config.toml)
-  <span class="flag">-d, --directory</span>         include current directory
-  <span class="flag">-e, --editor string</span>     editor to open prompt in
-      <span class="flag">--file strings</span>      files to include
-  <span class="flag">-f, --fix</span>               fix mode - process captured command output
-  <span class="flag">-h, --help</span>              help for prompter
-  <span class="flag">-i, --interactive</span>       force interactive mode
-  <span class="flag">-n, --numbers</span>           enable number key selection for templates
-  <span class="flag">-o, --post string</span>       post-template name
-  <span class="flag">-p, --pre string</span>        pre-template name
-  <span class="flag">-t, --target string</span>     output target (clipboard, stdout, file:/path)
-  <span class="flag">-v, --version</span>           print version information
-  <span class="flag">-y, --yes</span>               noninteractive mode - use defaults</code></pre>
+          <pre class="terminal-code" data-content="fix"><code>bun test | prompter --fix
+</code></pre>
+
+          <pre class="terminal-code" data-content="help"><code>Global templates
+~/.local/share/prompter/prompts
+
+  Add Test  
+  Generate tests based on context
+  -a, --add-test                 
+
+  Question  
+  Do not generate code
+  -q, --question      
+
+  Next Task
+  Do the next task in plan.md, only.
+  -s, --stick-to-the-plan           
+
+  Keymap
+  Create nvim keymap  
+  -v, --vnk-neovimkeys
+
+Global Skills
+
+  Frontend Design
+  From ~/.opencode/skills
+  -f, --frontend-design
+
+  Summarize Context
+  From ~/.opencode/skills
+  -u, --summarize      
+
+Local Skills
+
+  Local Skill Example
+  From .agents/skills
+  -l, --local-skill  
+
+  custom-cursor-command
+  From .cursor/commands      
+  -c, --custom-cursor-command
+
+Agent templates
+
+  Agent instructions
+  From AGENTS.md 
+  -a, --agents-md
+</code></pre>
         </div>
       </div>
 
