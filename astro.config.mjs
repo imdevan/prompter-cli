@@ -46,37 +46,6 @@ export default defineConfig({
       // },
       sidebar: [
         "intro",
-        "usage",
-        "configuration",
-        "interactive-mode",
-        "custom-templates",
-        {
-          label: "Commands",
-          items: [
-            "commands/prompts",
-            "commands/add",
-            "commands/list",
-          ],
-        },
-        {
-          label: "Advanced",
-          items: [
-            "advanced/template-syntax",
-            "advanced/local-templates",
-            "advanced/multiple-locations",
-            "advanced/best-practices",
-          ],
-        },
-        {
-          label: "Reference",
-          items: [
-            "reference/config-file",
-            "reference/flags",
-            "reference/template-variables",
-            "reference/examples",
-          ],
-        },
-        "troubleshooting",
       ],
       components: {
         Hero: "./src/components/Hero.astro",
