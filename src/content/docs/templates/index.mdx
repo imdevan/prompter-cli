@@ -1,0 +1,20 @@
+---
+title: Templates
+description: Working with prompt templates
+---
+
+Templates are reusable Markdown files that Prompter loads and applies in order. Each template can include optional frontmatter for metadata and use Go template syntax for dynamic content.
+
+## Template Locations
+
+- **Global templates**: `prompts_location` (default: `~/.local/share/prompter/prompts`)
+- **Local templates**: `local_prompts_location` under the current directory (default: `prompts/`)
+
+Local templates take precedence over global templates when names overlap.
+
+## Template Structure
+
+Templates consist of two parts:
+
+1. **Frontmatter** (optional) - YAML metadata that controls how the template appears and behaves
+2. **Content** - Markdown content with optional Go template syntax for dynamic behavior

@@ -1,0 +1,115 @@
+---
+title: completion
+description: Generate shell completion scripts
+---
+
+Generate shell completion scripts for Prompter CLI.
+
+## Usage
+
+```bash
+prompter completion [shell]
+```
+
+Supported shells:
+
+- `bash`
+- `zsh`
+- `fish`
+- `powershell`
+
+## Installation
+
+### Bash
+
+```bash
+# Generate completion script
+prompter completion bash > /usr/local/etc/bash_completion.d/prompter
+
+# Or for user-only installation
+prompter completion bash > ~/.local/share/bash-completion/completions/prompter
+```
+
+Then reload your shell or source the completion file:
+
+```bash
+source ~/.local/share/bash-completion/completions/prompter
+```
+
+### Zsh
+
+```bash
+# Generate completion script
+prompter completion zsh > "${fpath[1]}/_prompter"
+
+# Or add to your .zshrc
+echo 'source <(prompter completion zsh)' >> ~/.zshrc
+```
+
+Then reload your shell:
+
+```bash
+source ~/.zshrc
+```
+
+### Fish
+
+```bash
+# Generate completion script
+prompter completion fish > ~/.config/fish/completions/prompter.fish
+```
+
+Completions will be available in new shell sessions.
+
+### PowerShell
+
+```powershell
+# Add to your PowerShell profile
+prompter completion powershell | Out-String | Invoke-Expression
+
+# Or save to profile
+prompter completion powershell >> $PROFILE
+```
+
+## What Gets Completed
+
+Shell completion provides suggestions for:
+
+- **Commands**: `add`, `edit`, `list`, `history`, `config`, `completion`
+- **Flags**: All built-in flags like `--file`, `--directory`, `--template`
+- **Template flags**: Custom flags defined in your templates
+- **Template names**: When using `--template` flag
+- **File paths**: When using `--file` flag
+- **Config options**: When editing config files
+
+## Troubleshooting
+
+### Completions Not Working
+
+1. Ensure the completion script is in the correct location
+2. Reload your shell or source the completion file
+3. Check that the completion system is enabled in your shell
+
+### Bash Completion Not Loading
+
+Ensure bash-completion is installed:
+
+```bash
+# macOS
+brew install bash-completion@2
+
+# Ubuntu/Debian
+sudo apt install bash-completion
+
+# Fedora
+sudo dnf install bash-completion
+```
+
+### Zsh Completion Not Loading
+
+Ensure completion system is initialized in your `.zshrc`:
+
+```bash
+autoload -Uz compinit
+compinit
+```

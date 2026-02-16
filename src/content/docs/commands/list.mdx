@@ -1,0 +1,73 @@
+---
+title: list
+description: List available templates
+---
+
+Display all available prompt templates with their descriptions and flags.
+
+## Usage
+
+```bash
+prompter list [flags]
+```
+
+## Flags
+
+- `--agents`, `-a` - Include agent-specific templates (AGENTS.md, .cursor/commands, .kiro/steering, opencode)
+
+## Output
+
+The list command displays templates grouped by location:
+
+- User templates (from `prompts_location`)
+- Local templates (from `local_prompts_location` in current directory)
+- Agent templates (when `--agents` flag is used)
+
+For each template, you'll see:
+
+- Template name
+- Description (if provided)
+- Available flags (long and short forms)
+- Pin indicator (📌) for pinned templates
+
+## Examples
+
+### List User Templates
+
+```bash
+prompter list
+```
+
+Example output:
+
+```
+User templates
+/Users/you/.local/share/prompter/prompts
+
+code-review
+Review code for best practices and potential issues
+-r, --code-review
+
+bug-fix
+Help diagnose and fix bugs
+-b, --bug-fix
+```
+
+### Include Agent Templates
+
+Same as `include_agents` = `all` in config.
+
+```bash
+prompter list --agents
+```
+
+This will also show:
+
+- AGENTS.md (if present in workspace)
+- .cursor/commands/* files
+- .kiro/steering/* files
+- opencode templates
+
+## Template Discovery
+
+See [`Template Discovery`](/templates/discovery) for more info.

@@ -1,0 +1,185 @@
+---
+title: Neovim Integration
+description: Integrate Prompter CLI with Neovim
+---
+
+Integrate Prompter CLI with Neovim for seamless AI-assisted coding.
+
+## Basic Integration
+
+### Review Current File
+
+```lua
+-- ~/.config/nvim/lua/prompter.lua
+
+local M = {}
+
+function M.review_file()
+  local file = vim.fn.expand('%:p')
+  vim.cmd('!prompter "review this file" --file ' .. file .. ' --code-review')
+end
+
+vim.keymap.set('n', '<leader>pr', M.review_file, { desc = 'Prompter: Review file' })
+
+return M
+```
+
+### Review Selection
+
+```lua
+function M.review_selection()
+  -- Get visual selection
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+  
+  -- Extract selection
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local selection = table.concat(lines, '\n')
+  
+  -- Create temp file
+  local tmp = vim.fn.tempname()
+  vim.fn.writefile(vim.split(selection, '\n'), tmp)
+  
+  -- Run prompter
+  vim.cmd('!prompter "review this code" --file ' .. tmp .. ' --code-review')
+  
+  -- Cleanup
+  vim.fn.delete(tmp)
+end
+
+vim.keymap.set('v', '<leader>pr', M.review_selection, { desc = 'Prompter: Review selection' })
+```
+
+## Complete Plugin
+
+```lua
+-- ~/.config/nvim/lua/prompter.lua
+
+local M = {}
+
+-- Configuration
+M.config = {
+  default_template = 'code-review',
+  clipboard_target = true,
+}
+
+-- Review current file
+function M.review_file(template)
+  template = template or M.config.default_template
+  local file = vim.fn.expand('%:p')
+  local cmd = string.format('prompter "review this file" --file %s --%s', file, template)
+  vim.cmd('!' .. cmd)
+end
+
+-- Review selection
+function M.review_selection(template)
+  template = template or M.config.default_template
+  
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local selection = table.concat(lines, '\n')
+  
+  local tmp = vim.fn.tempname()
+  vim.fn.writefile(vim.split(selection, '\n'), tmp)
+  
+  local cmd = string.format('prompter "review this code" --file %s --%s', tmp, template)
+  vim.cmd('!' .. cmd)
+  
+  vim.fn.delete(tmp)
+end
+
+-- Review git diff
+function M.review_diff()
+  vim.cmd('!git diff | prompter "review these changes" --code-review')
+end
+
+-- Generate tests
+function M.generate_tests()
+  local file = vim.fn.expand('%:p')
+  local test_file = file:gsub('%.go$', '_test.go')
+  local cmd = string.format(
+    'prompter "generate tests" --file %s --tests --target file:%s',
+    file, test_file
+  )
+  vim.cmd('!' .. cmd)
+  vim.cmd('edit ' .. test_file)
+end
+
+-- Security review
+function M.security_review()
+  local file = vim.fn.expand('%:p')
+  vim.cmd('!prompter "security review" --file ' .. file .. ' --security')
+end
+
+-- Setup keymaps
+function M.setup(opts)
+  M.config = vim.tbl_deep_extend('force', M.config, opts or {})
+  
+  -- File operations
+  vim.keymap.set('n', '<leader>pr', M.review_file, { desc = 'Prompter: Review file' })
+  vim.keymap.set('n', '<leader>ps', M.security_review, { desc = 'Prompter: Security review' })
+  vim.keymap.set('n', '<leader>pt', M.generate_tests, { desc = 'Prompter: Generate tests' })
+  
+  -- Selection operations
+  vim.keymap.set('v', '<leader>pr', M.review_selection, { desc = 'Prompter: Review selection' })
+  
+  -- Git operations
+  vim.keymap.set('n', '<leader>pg', M.review_diff, { desc = 'Prompter: Review diff' })
+end
+
+return M
+```
+
+### Plugin Setup
+
+```lua
+-- ~/.config/nvim/init.lua
+
+require('prompter').setup({
+  default_template = 'code-review',
+  clipboard_target = true,
+})
+```
+
+## Example Workflows
+
+### Quick Review
+
+```vim
+" Review current file
+<leader>pr
+
+" Review selection
+(visual mode) <leader>pr
+
+" Review with specific template
+:lua require('prompter').review_file('security')
+```
+
+### Generate Tests
+
+```vim
+" Generate tests for current file
+<leader>pt
+
+" Opens test file with generated tests
+```
+
+### Review Git Changes
+
+```vim
+" Review uncommitted changes
+<leader>pg
+
+" Review specific commit
+:!git show HEAD | prompter "review this commit" --code-review
+```
+
+## Tips
+
+1. **Use async execution** - Prevent blocking Neovim
+2. **Capture output** - Show results in floating windows
+3. **Create custom commands** - Simplify common workflows
+4. **Integrate with LSP** - Add as code action provider
+5. **Use which-key** - Discoverable keybindings

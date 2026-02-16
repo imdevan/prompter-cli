@@ -1,0 +1,44 @@
+---
+title: config
+description: View or edit configuration
+---
+
+Manage Prompter CLI configuration files.
+
+## Usage
+
+```bash
+prompter config [subcommand]
+```
+
+## Subcommands
+
+### config (default)
+
+Opens your configuration file in your editor. If no config exists, creates one with default values.
+
+```bash
+prompter config
+```
+
+### config init
+
+Generate a new configuration file with all available options (commented out).
+
+```bash
+prompter config init [flags]
+```
+
+Flags:
+- `--force`, `-f` - Overwrite existing config
+- `--editor`, `-e` - Open config in editor after creation
+
+## Configuration Locations
+
+Prompter searches for configuration in this order:
+
+1. **Local config**: `.prompter/config.toml` in current directory
+2. **Global config**: `$XDG_CONFIG_HOME/prompter/config.toml` (usually `~/.config/prompter/config.toml`)
+
+Local config takes precedence over global config.
+

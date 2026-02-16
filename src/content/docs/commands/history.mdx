@@ -1,0 +1,195 @@
+---
+title: history
+description: View and manage prompt history
+---
+
+View, search, and manage your saved prompt history.
+
+## Usage
+
+```bash
+prompter history [index|tag] [flags]
+```
+
+## Flags
+
+- `--clear`, `-c` - Clear all prompt history
+- `--yes`, `-y` - Skip confirmation when clearing
+- `--keep-tags`, `-k` - Keep tagged entries when clearing
+- `--editor`, `-e` - Open history folder in editor
+- `--insert`, `-n` - Open history entry for insertion (adds separator for new content)
+
+## Interactive Browser
+
+Without arguments, opens an interactive browser:
+
+```bash
+prompter history
+```
+
+Features:
+
+- Browse history entries with timestamps
+- Filter/search entries
+- View entry details (size, tokens, flags used)
+- Open entry in editor (press Enter)
+- Open for insertion (press `i`)
+- Delete entry (press `d`)
+
+## Direct Access by Index
+
+```bash
+prompter history 1
+```
+
+Opens the most recent history entry (index 1) in your editor.
+
+## Search by Tag
+
+```bash
+prompter history bug-123
+```
+
+Searches for history entries tagged with "bug-123" and opens them.
+
+## Examples
+
+### Browse History
+
+```bash
+prompter history
+```
+
+Interactive browser shows:
+
+```
+History
+
+#bug-fix
+2 hours ago
+ r • ~450 • 1.8 KB
+
+One day ago
+ _ • ~320 • 1.3 KB
+
+Jan 15 2024 14:30
+ dr • ~890 • 3.5 KB
+```
+
+### Open Recent Entry
+
+```bash
+prompter history 1
+```
+
+Opens the most recent entry in your editor.
+
+### Open for Insertion
+
+```bash
+prompter history 1 --insert
+```
+
+Opens the entry with a separator marker, allowing you to add new content above the previous prompt. Useful for iterating on prompts.
+
+### Search Tagged Entries
+
+```bash
+# Create a tagged prompt
+prompter "fix login bug" --tag bug-123
+
+# Later, find it
+prompter history bug-123
+```
+
+### Clear History
+
+```bash
+# Clear all history (with confirmation)
+prompter history --clear
+
+# Clear without confirmation
+prompter history --clear --yes
+
+# Clear but keep tagged entries
+prompter history --clear --keep-tags
+```
+
+### Open History Folder
+
+```bash
+prompter history --editor
+```
+
+Opens your history directory in your configured editor.
+
+## History Display
+
+Each entry shows:
+
+- **Tag** (if present): `#tag-name`
+- **Time**: Relative time (e.g., "2 hours ago") or absolute date
+- **Flags**: Template shorthand flags used  on creation (e.g., `dr` for directory + code-review)
+- **Tokens**: Estimated token count (~4 chars per token)
+- **Size**: File size in bytes/KB/MB
+
+## History Format
+
+History entries are saved as Markdown files with frontmatter:
+
+```markdown
+---
+tag: "bug-123"
+---
+
+[Your base prompt]
+
+---
+
+[Template content]
+
+---
+
+[File content]
+```
+
+## History Location
+
+History is saved to `history_location` (default: `$XDG_CACHE_HOME/prompter/history`).
+
+Configure in your config file:
+
+```toml
+history_location = "$XDG_CACHE_HOME/prompter/history"
+disable_history = false
+```
+
+## Automatic Cleanup
+
+History entries are automatically pruned based on `history_clear_cycle`:
+
+```toml
+# Never clear (default)
+history_clear_cycle = "never"
+
+# Clear after 1 day
+history_clear_cycle = "1"
+
+# Clear after 7 days
+history_clear_cycle = "7"
+
+# Clear after 31 days
+history_clear_cycle = "31"
+```
+
+Tagged entries are preserved unless you use `--keep-tags=false` when clearing.
+
+## Vim Integration
+
+When using Vim/Neovim with `--insert`, the cursor is positioned at the insertion point:
+
+```bash
+prompter history 1 --insert
+```
+
+Opens the file with the cursor at the separator line, ready to add new content.

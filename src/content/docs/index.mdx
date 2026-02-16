@@ -1,8 +1,33 @@
 ---
 title: Prompter CLI
-description: A CLI tool for assembling high-quality prompts for AI coding agents
+description: Assemble high-quality prompts for AI coding agents
 template: splash
 hero:
   title: Prompter CLI
+  tagline: Assemble high-quality prompts for AI coding agents by combining templates with contextual data from files, directories, and command output.
+  actions:
+    - text: Get Started
+      link: /install/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/imdevan/prompter
+      icon: external
 ---
 
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Interactive by Default" icon="bolt">
+    Inline TUI flows let you collect a base prompt and pick templates without leaving the terminal.
+  </Card>
+  <Card title="Template-Driven" icon="document">
+    Create reusable prompt templates with frontmatter metadata and dynamic content using Go templates.
+  </Card>
+  <Card title="Context-Aware" icon="puzzle">
+    Include files, directories, and command output in your prompts automatically.
+  </Card>
+  <Card title="History Tracking" icon="list-format">
+    Save and search prompt history with tags for easy retrieval.
+  </Card>
+</CardGrid>

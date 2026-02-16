@@ -1,0 +1,248 @@
+---
+title: Template Discovery
+description: How Prompter finds and loads templates
+---
+
+Prompter discovers templates from multiple locations, allowing for both global and project-specific templates.
+
+## Discovery Order
+
+Templates are discovered in this order:
+
+1. **User templates** - Global templates from `prompts_location`
+2. **Local templates** - Project-specific templates from `local_prompts_location`
+3. **Agent templates** - AI agent configuration files (when enabled)
+
+## User Templates
+
+Global templates available across all projects.
+
+**Default location**: `$XDG_DATA_HOME/prompter/prompts`
+- Linux: `~/.local/share/prompter/prompts`
+- macOS: `~/Library/Application Support/prompter/prompts`
+
+**Configure**:
+```toml
+prompts_location = "$XDG_DATA_HOME/prompter/prompts"
+```
+
+**Create**:
+```bash
+prompter add my-template "Template content"
+```
+
+## Local Templates
+
+Project-specific templates that override user templates with the same name.
+
+**Default location**: `./prompts` (relative to current directory)
+
+**Configure**:
+```toml
+local_prompts_location = "prompts"
+```
+
+**Create**:
+```bash
+mkdir -p prompts
+prompter edit project-template
+```
+
+## Agent Templates
+
+Templates from AI coding agent configurations.
+
+### AGENTS.md
+
+Workspace-level agent instructions.
+
+**Location**: `AGENTS.md` in workspace root
+
+**Enable**:
+```bash
+prompter --agents
+```
+
+Or configure:
+```toml
+include_agents = "all"
+```
+
+### Cursor Commands
+
+Cursor IDE command files.
+
+**Location**: `.cursor/commands/*.md`
+
+**Enable**: Same as AGENTS.md
+
+### Kiro Steering
+
+Kiro steering files.
+
+**Location**: `.kiro/steering/*.md`
+
+**Enable**: Same as AGENTS.md
+
+### OpenCode Templates
+
+OpenCode template files.
+
+**Enable**: Same as AGENTS.md
+
+## Configuration Options
+
+Control which agent templates are included:
+
+```toml
+# Include all agent templates
+include_agents = "all"
+
+# Include none
+include_agents = "none"
+
+# Include specific types
+include_agents = "agents"      # Only AGENTS.md
+include_agents = "cursor"      # Only .cursor/commands
+include_agents = "kiro"        # Only .kiro/steering
+include_agents = "opencode"    # Only opencode
+include_agents = "antigravity" # Only antigravity
+```
+
+## Directory Strategy
+
+Control how directory content is included:
+
+```toml
+# Use git tracked files (default)
+directory_strategy = "git"
+
+# Walk filesystem (respects .gitignore)
+directory_strategy = "filesystem"
+```
+
+**Strategies explained**:
+- `git` - Include only tracked files (respects git status)
+- `filesystem` - Walk the directory tree (respects .gitignore)
+
+## Template Precedence
+
+When templates have the same name:
+
+1. **Local templates** override user templates
+2. **User templates** override agent templates
+3. **Agent templates** are used if no other template exists
+
+Example:
+```
+User: prompts/code-review.md
+Local: prompts/code-review.md  ← This one is used
+```
+
+## Template File Format
+
+Templates must be Markdown files with `.md` extension:
+
+```
+prompts/
+├── code-review.md      ✓ Discovered
+├── bug-fix.md          ✓ Discovered
+├── notes.txt           ✗ Not discovered
+└── draft.md.bak        ✗ Not discovered
+```
+
+Nested folders are supported:
+
+```
+prompts/
+├── reviews/
+│   ├── code-review.md
+│   └── security.md
+└── docs/
+    └── api-docs.md
+```
+
+## Listing Discovered Templates
+
+See all discovered templates:
+
+```bash
+prompter list
+```
+
+Include agent templates:
+
+```bash
+prompter list --agents
+```
+
+## Troubleshooting
+
+### Template Not Found
+
+1. Check template location:
+   ```bash
+   ls -la ~/.local/share/prompter/prompts
+   ```
+
+2. Verify file extension is `.md`
+
+3. Check configuration:
+   ```bash
+   prompter config
+   ```
+
+### Local Template Not Overriding
+
+1. Ensure you're in the correct directory
+2. Check `local_prompts_location` configuration
+3. Verify template name matches exactly (case-sensitive)
+
+### Agent Templates Not Showing
+
+1. Use `--agents` flag or configure `include_agents`
+2. Verify agent files exist:
+   ```bash
+   ls -la AGENTS.md .cursor/commands .kiro/steering
+   ```
+
+## Examples
+
+### Project-Specific Setup
+
+```bash
+# Create project templates directory
+mkdir -p prompts
+
+# Create project-specific template
+prompter edit api-design
+
+# Use it
+prompter --template api-design
+```
+
+### Multi-Project Setup
+
+```
+~/projects/
+├── web-app/
+│   └── prompts/
+│       ├── frontend.md
+│       └── backend.md
+└── mobile-app/
+    └── prompts/
+        ├── ios.md
+        └── android.md
+```
+
+Each project has its own templates, plus access to global user templates.
+
+### Agent Integration
+
+```bash
+# Create workspace agent instructions
+echo "# Agent Instructions" > AGENTS.md
+
+# Use with prompts
+prompter "explain this" --agents
+```

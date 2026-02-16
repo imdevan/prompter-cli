@@ -1,0 +1,94 @@
+---
+title: Installation
+description: How to install Prompter CLI on your system
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components"
+
+## Install
+
+<Tabs>
+<TabItem label="Homebrew">
+
+```bash
+brew install imdevan/prompter/prompter
+```
+
+</TabItem>
+<TabItem label="AUR">
+
+```bash
+yay -S prompter
+```
+
+</TabItem>
+<TabItem label="GitHub Releases">
+
+Download the latest binary from [GitHub Releases](https://github.com/imdevan/prompter/releases):
+
+```bash
+# macOS (Apple Silicon)
+curl -L https://github.com/imdevan/prompter/releases/latest/download/prompter-darwin-arm64 -o prompter
+
+# macOS (Intel)
+curl -L https://github.com/imdevan/prompter/releases/latest/download/prompter-darwin-amd64 -o prompter
+
+# Linux
+curl -L https://github.com/imdevan/prompter/releases/latest/download/prompter-linux-amd64 -o prompter
+
+chmod +x prompter
+sudo mv prompter /usr/local/bin/
+```
+
+</TabItem>
+<TabItem label="From Source">
+
+Requires Go 1.21+ and just:
+
+```bash
+git clone https://github.com/imdevan/prompter.git
+cd prompter
+just build
+sudo just install
+```
+
+</TabItem>
+</Tabs>
+
+## Verify Installation
+
+```bash
+prompter --version
+```
+
+## Quick Start
+
+Add a template:
+
+```bash
+prompter add question "This is a question. Do not generate code."
+```
+
+Generate your first prompt:
+
+```bash
+prompter -q "how can i debug this code?"
+```
+
+The prompt will be copied to your clipboard by default, ready to paste into your AI coding agent.
+
+## How It Works
+
+Prompter builds a single prompt by combining your base request with reusable templates and real project context:
+
+1. Load the `index.md` template if it exists
+2. Apply selected templates in the order you pass them
+3. Insert the base prompt where it appears in that order
+4. Append files, directory contents, and piped input if provided
+
+## Interactive vs Non-Interactive
+
+- **Interactive mode** (default) prompts for a base prompt and lets you select templates
+- **Non-interactive mode** (`--yes`) uses flags and arguments only
+
+To control the default, set `interactive_default` in your config.

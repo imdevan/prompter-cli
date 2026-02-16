@@ -1,0 +1,34 @@
+---
+title: index.md
+description: Index template
+---
+
+`index.md` is a special template that is always applied to prompts.
+
+## Example
+
+Given the following inde.md file:
+
+```index.md
+Please,
+
+{{.Prompt}}
+
+Thank you!
+```
+
+And the following prompt
+
+```
+prompter "Do the thing!"
+```
+
+Output:
+
+```
+Please,
+
+Do the thing!
+
+Thank you!
+```

@@ -1,0 +1,59 @@
+---
+title: Commands
+description: Prompter CLI commands reference
+---
+
+Prompter provides several commands for managing templates, configuration, and prompt history.
+
+## Available Commands
+
+- [`prompter` (generate)](/commands/generate/) - Generate prompts from templates and context
+- [`prompter add`](/commands/add/) - Add a new template
+- [`prompter edit`](/commands/edit/) - Edit an existing template
+- [`prompter list`](/commands/list/) - List available templates
+- [`prompter history`](/commands/history/) - View and search prompt history
+- [`prompter config`](/commands/config/) - Manage configuration
+- [`prompter completion`](/commands/completion/) - Generate shell completion scripts
+
+## Quick Reference
+
+```bash
+# Generate a prompt
+prompter "explain this code"
+
+# Add a new template
+prompter add review "Review this code"
+
+# Edit a template
+prompter edit review
+
+# List templates
+prompter list
+
+# View history
+prompter history
+
+# Edit config
+prompter config
+
+# Generate completions
+prompter completion bash
+```
+
+## Global Flags
+
+These flags work with all commands:
+
+- `--config` - Specify a custom config file path
+- `--version`, `-V` - Print version information
+- `--help`, `-h` - Show help for any command
+
+## Getting Help
+
+Get help for any command:
+
+```bash
+prompter --help
+prompter generate --help
+prompter add --help
+```

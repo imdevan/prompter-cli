@@ -45,7 +45,40 @@ export default defineConfig({
       //   replacesTitle: true,
       // },
       sidebar: [
-        "intro",
+        { slug: "install" },
+        { slug: "configuration" },
+        {
+          label: "Commands",
+          items: [
+            "commands",
+            "commands/generate",
+            "commands/list",
+            "commands/add",
+            "commands/edit",
+            "commands/history",
+            "commands/config",
+            "commands/completion",
+          ],
+        },
+        {
+          label: "Templates",
+          items: [
+            "templates",
+            "templates/syntax",
+            "templates/prompt-templates",
+            "templates/discovery",
+            "templates/index-template",
+          ],
+        },
+        {
+          label: "Editor Compatibility",
+          slug: "editors",
+        },
+        {
+          label: "Advanced",
+          items: ["advanced/use-cases"],
+        },
+
       ],
       components: {
         Hero: "./src/components/Hero.astro",

@@ -1,0 +1,406 @@
+---
+title: prompter (generate)
+description: Generate prompts from templates and context
+---
+
+The main command for generating prompts. Can be invoked as `prompter` or `prompter generate`.
+
+## Usage
+
+```bash
+prompter [base-prompt] [flags]
+```
+
+## Modes
+
+- **Interactive mode** (default) prompts for a base prompt and lets you select templates
+- **Non-interactive mode** (`--yes`) uses only arguments and flags
+
+```bash
+# Interactive
+prompter
+
+# Non-interactive
+prompter "explain this function" --yes
+```
+
+## Inputs
+
+### Base Prompt
+
+Passed as arguments and joined with spaces:
+
+```bash
+prompter "explain this code"
+prompter explain this code  # Same as above
+```
+
+### Clipboard
+
+Append clipboard text or use it as the base prompt:
+
+```bash
+# Append clipboard
+prompter "explain this output" --clipboard
+
+# Use clipboard as base prompt (if no prompt provided)
+prompter --clipboard
+```
+
+### Piped Input
+
+Any stdin content is appended at the end:
+
+```bash
+# Pipe command output
+git diff | prompter "explain these changes"
+
+# Pipe file content
+cat error.log | prompter "analyze this error"
+
+# Pipe test output
+bun test | prompter "summarize this failure" --yes
+```
+
+## Templates
+
+### By Name
+
+```bash
+prompter --template code-review
+prompter --template code-review --template security
+```
+
+### By Flag
+
+Template flags are automatically generated based on the
+markdown file name and can also be set in template frontmatter.
+
+More information in [`Templates`](/templates#flags).
+
+```bash
+# If template has flag: "code-review"
+prompter --code-review
+
+# If template has shorthand: "r"
+prompter -r
+```
+
+Use `prompter --help` to see all available template flags.
+
+Including dynamically generated template flags.
+
+# Built-in Flags
+
+## Built-in Shorthand Flags
+
+Because templates dynamically generate flags as a part of my primary workflows with prompter,
+the built-in flag shorthands are defaulted to use capital case for the root comamnd.
+
+All shorthands can be remapped in the [`Config`]('/configuration#flag-remapping').
+
+## Help
+
+Prompter is designed to do a lot of things. And do weird things with the flag manipulation.
+
+You can check the builtin and dynamically generated flags with the `--help` flag. For any command.
+
+```bash
+prompter --help
+```
+
+Short form:
+
+```bash
+prompter -H
+```
+
+## Context Flags
+
+### Files
+
+Include specific files (repeatable):
+
+```bash
+prompter "review these" --file main.go
+prompter "review these" --file main.go --file utils.go
+```
+
+Short form:
+
+```bash
+prompter "review these" -F main.go -F utils.go
+```
+
+### Directory Path
+
+Include the current directory path:
+
+```bash
+prompter "analyze the codebase" --directory
+```
+
+Short form:
+
+```bash
+prompter "analyze the codebase" -D
+```
+
+### Directory Content
+
+Include the current directory contents:
+
+```bash
+prompter "analyze the codebase" --dir-content
+```
+
+**Warning:** this will dump top level file contents into the prompt
+
+Directory inclusion uses `directory_strategy` from config:
+
+- `git` - Include only tracked files
+- `filesystem` - Walk directory tree (respects .gitignore)
+
+## Output Flags
+
+### Target
+
+Specify where to send the output:
+
+```bash
+# Copy to clipboard (default)
+prompter "explain this" --target clipboard
+
+# Print to stdout
+prompter "explain this" --target stdout
+
+# Save to file (other than history)
+prompter "explain this" --target file:/tmp/prompt.txt
+
+# Open in editor 
+prompter "explain this" --target editor
+```
+
+Short form:
+
+```bash
+prompter "explain this" -T stdout
+```
+
+### Editor
+
+Open the prompt in your editor:
+
+```bash
+prompter "explain this" --editor
+```
+
+Short form:
+
+```bash
+prompter "explain this" -E
+```
+
+#### How is this different than `-T editor`?
+
+Dpending on your configured editor; `-T clipboard -E` allows you to use your editor to draft / touch up the prompt.
+While, still copying to the clipboard.
+
+If the target is clipboard, and the editor is a terminal compatible editor like [`nvim`](/integrations/nvim) the
+prompt will be copied on close.
+
+More info in [`Integrations`](/integrations/nvim)
+
+## History
+
+### Tagging
+
+Add a tag to the history entry:
+
+```bash
+prompter "fix bug #123" --tag bug-123
+```
+
+Short form:
+
+```bash
+prompter "fix bug #123" -G bug-123
+```
+
+Search history by tag later:
+
+```bash
+prompter history bug-123
+```
+
+More info in [`History`](/commands/history#tags)
+
+## Agents
+
+Include local `AGENTS.md` in prompt if present:
+
+```bash
+prompter "explain this" --agents
+```
+
+Short form:
+
+```bash
+prompter "explain this" -A
+```
+
+Agent templates are also controlled by the [`include_agents`](/configuration/#templates--agents) config setting.
+
+## Mode Control
+
+### Force Interactive
+
+Helpful if `interactive_default == false`
+
+```bash
+prompter --interactive "explain this"
+```
+
+Short form:
+
+```bash
+prompter -I "explain this"
+```
+
+### Force Non-Interactive
+
+Helpful if `interactive_default == true`
+
+```bash
+prompter --yes "explain this"
+```
+
+Short form:
+
+```bash
+prompter -Y "explain this"
+```
+
+## Template Order
+
+Templates are applied in the order they appear on the command line. The base prompt is inserted where the first non-flag argument appears.
+
+```bash
+# Base prompt after template
+prompter --template context "explain this"
+
+# Base prompt between templates
+prompter --template before "explain this" --template after
+```
+
+## Examples
+
+### Basic Usage
+
+```bash
+# Simple prompt
+prompter "explain this code"
+
+# With a specific file
+prompter "review this" --file src/main.go
+
+# Include entire directory
+prompter "analyze the codebase" --directory
+```
+
+### Using Templates
+
+```bash
+# Use a specific template
+prompter --template code-review
+
+# Use multiple templates
+prompter --template code-review --template security-check
+
+# Use template shorthand flags
+prompter -r  # Uses code-review template with shorthand 'r'
+```
+
+### Output Targets
+
+```bash
+# Copy to clipboard (default)
+prompter "explain this"
+
+# Print to stdout
+prompter "explain this" --target stdout
+
+# Save to file
+prompter "explain this" --target file:/tmp/prompt.txt
+
+# Open in editor
+prompter "explain this" --editor
+```
+
+### With Context
+
+```bash
+# Include clipboard content
+prompter "explain this output" --clipboard
+
+# Include specific files
+prompter "review these files" --file src/main.go --file src/utils.go
+
+# Include directory with agent templates
+prompter "analyze the project" --directory --agents
+```
+
+### Tagged History
+
+```bash
+# Add a tag for later retrieval
+prompter "fix bug #123" --tag bug-123
+
+# Search history by tag later
+prompter history bug-123
+```
+
+### Piped Workflows
+
+```bash
+# Analyze test failures
+npm test 2>&1 | prompter "explain these test failures" --yes
+
+# Review git changes
+git diff | prompter --code-review --yes
+
+# Analyze logs
+tail -n 100 app.log | prompter "find the error" --yes
+```
+
+## Configuration
+
+Override config with flags:
+
+```bash
+# Use custom config file
+prompter --config .prompter/custom-config.toml
+
+# Force interactive mode
+prompter --interactive
+
+# Force non-interactive mode
+prompter --yes
+```
+
+## Reserved Short Flags
+
+These single-letter flags are reserved by Prompter:
+
+- `-A` - Agents
+- `-B` - Clipboard
+- `-D` - Directory
+- `-E` - Editor
+- `-F` - File
+- `-G` - Tag (history)
+- `-I` - Interactive
+- `-T` - Target
+- `-V` - Version
+- `-Y` - Yes (non-interactive)
+
+Template shorthands cannot use these letters unless remapped in config.

@@ -1,0 +1,126 @@
+---
+title: add
+description: Add a new template
+---
+
+Create a new prompt template interactively or from command-line arguments.
+
+## Usage
+
+```bash
+prompter add [name] [content] [flags]
+```
+
+## Flags
+
+- `--editor`, `-e` - Open the template in your editor after creation
+- `--force`, `-f` - Overwrite existing template without confirmation
+- `--interactive`, `-i` - Force interactive mode (prompts for name and content)
+
+## Interactive Mode
+
+When called without arguments or with `--interactive`, Prompter will prompt you for:
+
+1. Template name
+2. Template content (multi-line text area)
+
+```bash
+prompter add
+```
+
+## Non-Interactive Mode
+
+Provide the template name and content as arguments:
+
+```bash
+prompter add my-template "This is my template content"
+```
+
+## Examples
+
+### Create Template Interactively
+
+```bash
+prompter add
+```
+
+You'll be prompted to enter:
+
+- Name: `code-review`
+- Content: (multi-line editor opens)
+
+### Create Template from Arguments
+
+```bash
+prompter add code-review "Review this code for best practices and potential issues"
+```
+
+### Create and Edit
+
+```bash
+prompter add code-review "Initial content" --editor
+```
+
+This creates the template and immediately opens it in your configured editor.
+
+### Create from Piped Input
+
+```bash
+cat template.txt | prompter add my-template
+```
+
+### Overwrite Existing Template
+
+```bash
+prompter add code-review "Updated content" --force
+```
+
+Without `--force`, you'll be prompted to confirm overwriting.
+
+## Template Format
+
+Templates are saved as Markdown files with optional frontmatter:
+
+```markdown
+---
+name: "Code Review"
+description: "Review code for best practices"
+flag: "code-review"
+shorthand: "r"
+pin: false
+---
+
+# Code Review
+
+Review this code for:
+- Best practices
+- Potential bugs
+- Performance issues
+```
+
+After creating a template with `add`, you can edit it to add frontmatter metadata:
+
+```bash
+prompter edit my-template
+```
+
+## Skills
+
+Prompt templates are not skills; although they are very similar.
+
+You can, however, use your skills as prompt templates with no import needed.
+
+See [`include_agents`](/configuration#templates--agents) for more info.
+
+## Template Location
+
+Templates are saved to your configured `prompts_location` (default: `$XDG_DATA_HOME/prompter/prompts`).
+
+To create a project-specific template, use the `edit` command in your project directory:
+
+```bash
+cd my-project
+prompter edit project-template
+```
+
+This will create the template in your local `prompts/` directory.

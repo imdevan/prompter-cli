@@ -1,0 +1,255 @@
+---
+title: Configuration
+description: Configure Prompter CLI behavior
+---
+
+Configure Prompter CLI through TOML configuration files.
+
+## Configuration Files
+
+Prompter searches for configuration in this order:
+
+1. **Local config**: `.prompter/config.toml` (current directory)
+2. **Global config**: `$XDG_CONFIG_HOME/prompter/config.toml`
+
+Local configuration overrides global configuration.
+
+## Creating Configuration
+
+### Initialize Config
+
+```bash
+prompter config init
+```
+
+Creates `~/.config/prompter/config.toml` with all options documented.
+
+### Edit Config
+
+```bash
+prompter config
+```
+
+Opens your configuration file in your editor.
+
+## Configuration Options
+
+### Locations
+
+```toml
+# Where user templates are stored
+prompts_location = "$XDG_DATA_HOME/prompter/prompts"
+
+# Where prompt history is saved
+history_location = "$XDG_CACHE_HOME/prompter/history"
+
+# Where local (project) templates are stored
+local_prompts_location = "prompts"
+```
+
+**Environment variables** are expanded:
+
+- `$XDG_DATA_HOME` - Usually `~/.local/share`
+- `$XDG_CONFIG_HOME` - Usually `~/.config`
+- `$XDG_CACHE_HOME` - Usually `~/.cache`
+- `$HOME` - User home directory
+
+### Templates & Agents
+
+```toml
+# Include agent templates
+# Options: all, none, agents, claude, opencode, cursor, antigravity, kiro
+include_agents = "all"
+
+# Editor command
+editor = "nvim"
+
+# Directory inclusion strategy
+# Options: git (tracked files), filesystem (walk directory, uses .gitignore)
+directory_strategy = "git"
+```
+
+**Directory strategies**:
+
+- `git` - Include only tracked files (respects git status)
+- `filesystem` - Walk the directory tree (respects .gitignore)
+
+### CLI Behavior
+
+```toml
+# Start in interactive mode by default
+interactive_default = true
+
+# Show base prompt input field in interactive mode
+show_base_prompt_input = true
+
+# Use Alt+Enter to submit (instead of Ctrl+D)
+alt_enter_submit = false
+
+# Include built-in shorthand flags
+include_builtin_shorthand = true
+```
+
+### Output
+
+```toml
+# Default output target
+# Options: clipboard, stdout, file:/path, editor
+target = "clipboard"
+```
+
+**Output targets**:
+
+- `clipboard` - Copy to system clipboard
+- `stdout` - Print to terminal
+- `file:/path` - Write to specified file
+- `editor` - Open in your configured editor
+
+### History
+
+```toml
+# Automatic history cleanup
+# Options: never, 1, 7, 31 (days)
+history_clear_cycle = "never"
+
+# History filename format
+# Options: month-day_eu, month-day_us, iso
+history_file_format = "month-day_eu"
+
+# Show relative time in history (e.g., "2 hours ago")
+history_enable_time_ago = true
+
+# Date/time format for history
+# Options: "day, month", "month, day", "iso", or Go time layout
+history_date_time = "day, month"
+
+# Disable history saving
+disable_history = false
+
+# Separator between prompt sections in history
+prompt_separator = "---"
+```
+
+### Colors
+
+Customize terminal colors using named colors, numeric values, or hex codes:
+
+```toml
+# Named colors: black, red, green, yellow, blue, magenta, cyan, white
+# Numeric: 0-255 (ANSI color codes)
+# Hex: "#ff8800"
+
+headings = "15"              # Bright white
+primary = "02"               # Green
+secondary = "06"             # Cyan
+text = "07"                  # Light gray
+text_highlight = "06"        # Cyan
+description_highlight = "05" # Magenta
+tags = "13"                  # Bright magenta
+flags = "12"                 # Bright blue
+muted = "08"                 # Dark gray
+base_prompt_badge = "06"     # Cyan
+border = "08"                # Dark gray
+```
+
+**Optional color fallbacks**:
+
+- `accent` - Used as a fallback for tags
+- `base_prompt` - Used as a fallback for text
+
+### Flag Remapping
+
+By default built-in shorthand flags in the root command
+are capitalized to prevent conflicts with genrated templates.
+
+You can change the bulit-in shorthand flags to suit your needs.
+
+You can set any flag shorthand to, a lowercase letter, a different uppercase letter,
+or remove it.
+
+These flags only affect the root command `prompter`.
+
+```toml
+[remap_short_flags]
+# Built-in flags: A B D E F I T V Y
+# Example remappings:
+directory = "d"  # Change -D to -d
+file = "f"       # Change -F to -f
+clipboard = "B"  # Keep as -B
+```
+
+## Complete Example
+
+```toml
+# Locations
+prompts_location = "$XDG_DATA_HOME/prompter/prompts"
+history_location = "$XDG_CACHE_HOME/prompter/history"
+local_prompts_location = "prompts"
+
+# Templates & agents
+include_agents = "all"
+editor = "nvim"
+directory_strategy = "git"
+
+# CLI behavior
+interactive_default = true
+show_base_prompt_input = true
+alt_enter_submit = false
+include_builtin_shorthand = true
+
+# Output
+target = "clipboard"
+
+# History
+history_clear_cycle = "7"
+history_file_format = "month-day_eu"
+history_enable_time_ago = true
+history_date_time = "day, month"
+disable_history = false
+prompt_separator = "---"
+
+# Colors
+headings = "15"
+primary = "02"
+secondary = "06"
+text = "07"
+text_highlight = "06"
+description_highlight = "05"
+tags = "13"
+flags = "12"
+muted = "08"
+base_prompt_badge = "06"
+border = "08"
+
+[remap_short_flags]
+directory = "d"
+```
+
+## Project-Specific Configuration
+
+Create `.prompter/config.toml` in your project:
+
+```toml
+# Use project templates
+local_prompts_location = "prompts"
+
+# Include agent templates
+include_agents = "all"
+
+# Project-specific editor
+editor = "code"
+
+# Output to file for CI
+target = "file:/tmp/prompt.txt"
+```
+
+## Configuration Precedence
+
+Configuration is merged in this order (later overrides earlier):
+
+1. Default values
+2. Global config (`~/.config/prompter/config.toml`)
+3. Local config (`.prompter/config.toml`)
+4. Environment variables
+5. Command-line flags
+

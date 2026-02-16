@@ -1,0 +1,60 @@
+---
+title: edit
+description: Edit an existing template
+---
+
+Open a template in your configured editor for editing.
+
+## Usage
+
+```bash
+prompter edit [name]
+```
+
+## Behavior
+
+### Edit Specific Template
+
+```bash
+prompter edit code-review
+```
+
+Opens the `code-review.md` template in your editor.
+
+### Open Templates Directory
+
+```bash
+prompter edit
+```
+
+Without a template name, opens your templates directory in your editor.
+
+### Create New Template
+
+If the template doesn't exist, Prompter will ask if you want to create it:
+
+```bash
+prompter edit new-template
+```
+
+You'll be prompted:
+
+```
+Template "new-template" not found. Create it? (y/n)
+```
+
+If you confirm, a new template is created with default frontmatter:
+
+```markdown
+---
+name: "new-template"
+description: "Describe when to use this template"
+flag: ""
+shorthand: ""
+pin: false
+---
+
+# new-template
+
+Write your template here.
+```

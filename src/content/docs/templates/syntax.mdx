@@ -1,0 +1,368 @@
+---
+title: Template Syntax
+description: Template frontmatter and Go template syntax
+---
+
+Templates use Markdown with optional YAML frontmatter for metadata and Go's `text/template` syntax for dynamic content.
+
+## Basic Structure
+
+```markdown
+---
+name: "Display Name"
+description: "When to use this template"
+flag: "template-flag"
+shorthand: "t"
+pin: false
+---
+
+# Template Content
+
+Your template content here with optional {{ .Prompt }} variables.
+```
+
+## Frontmatter Options
+
+### name
+
+Display name shown in lists and interactive mode.
+
+```yaml
+name: "Code Review"
+```
+
+If not specified, uses the filename (without `.md` extension).
+
+### description
+
+Brief description of when to use this template.
+
+```yaml
+description: "Review code for best practices and potential issues"
+```
+
+Shown in `prompter list` and interactive template selection.
+
+### flag
+
+Long-form command-line flag for this template.
+
+```yaml
+flag: "code-review"
+```
+
+Usage:
+```bash
+prompter --code-review
+```
+
+If not set, Prompter generates it from the file name.
+
+### shorthand
+
+Single-letter shorthand flag.
+
+```yaml
+shorthand: "r"
+```
+
+Usage:
+```bash
+prompter -r
+```
+
+**Note**: Shorthand must be a single letter and not conflict with built-in flags:
+- Reserved: `A`, `B`, `D`, `E`, `F`, `I`, `T`, `V`, `Y`
+
+### pin
+
+Pin template to top of lists.
+
+```yaml
+pin: true
+```
+
+Pinned templates appear first in `prompter list` and interactive selection.
+
+## Go Template Syntax
+
+Templates can use Go's `text/template` syntax with Sprig functions plus custom helpers.
+
+### Available Data
+
+- `.Prompt` - The prompt as assembled so far
+- `.BasePrompt` - The raw base prompt from the user
+- `.Files` - Array of file objects: `{ Path, Content }`
+- `.Directory` - Directory object: `{ Root, Files }`
+- `.CWD` - Current working directory
+- `.Config` - Resolved config values
+
+### Using .Prompt
+
+If a template references `.Prompt`, it can place the current prompt exactly where you want it. If it does not reference `.Prompt`, the template content is prepended.
+
+```markdown
+---
+name: "Summary"
+flag: "summary"
+---
+
+# Summary
+
+{{ .Prompt }}
+
+# Instructions
+Explain the content above in plain language.
+```
+
+### Custom Helpers
+
+#### mdFence
+
+Wrap content in a Markdown code fence:
+
+```markdown
+{{ mdFence "go" .BasePrompt }}
+```
+
+Output:
+````markdown
+```go
+your base prompt here
+```
+````
+
+### Sprig Functions
+
+All [Sprig functions](http://masterminds.github.io/sprig/) are available for string manipulation, date formatting, and more.
+
+```markdown
+{{ .BasePrompt | upper }}
+{{ now | date "2006-01-02" }}
+```
+
+### File and Directory Data
+
+Iterate over included files:
+
+```markdown
+{{- range .Files }}
+## {{ .Path }}
+{{ .Content }}
+{{- end }}
+```
+
+Access directory information:
+
+```markdown
+Working in: {{ .CWD }}
+Project root: {{ .Directory.Root }}
+```
+
+## Content Syntax
+
+Template content is standard Markdown:
+
+```markdown
+# Code Review Checklist
+
+## Best Practices
+- [ ] Follows project conventions
+- [ ] Proper error handling
+- [ ] Adequate test coverage
+
+## Security
+- [ ] Input validation
+- [ ] No hardcoded secrets
+- [ ] Proper authentication
+```
+
+## Complete Examples
+
+### Static Template
+
+```markdown
+---
+name: "Security Review"
+description: "Review code for security vulnerabilities"
+flag: "security"
+shorthand: "s"
+pin: true
+---
+
+# Security Review
+
+Analyze this code for security vulnerabilities:
+
+## Authentication & Authorization
+- Verify authentication mechanisms
+- Check authorization logic
+- Review session management
+
+## Input Validation
+- Check for SQL injection risks
+- Verify XSS prevention
+- Review file upload handling
+```
+
+### Dynamic Template with Variables
+
+```markdown
+---
+name: "Context Wrapper"
+description: "Wrap prompt with project context"
+flag: "context"
+shorthand: "c"
+---
+
+# Project Context
+
+Working directory: {{ .CWD }}
+
+{{ .Prompt }}
+
+Please follow project conventions when suggesting changes.
+```
+
+### Template with File Iteration
+
+```markdown
+---
+name: "File Summary"
+description: "Summarize included files"
+flag: "file-summary"
+---
+
+# File Summary
+
+{{- range .Files }}
+## {{ .Path }}
+{{ mdFence "auto" .Content }}
+{{- end }}
+
+{{ .BasePrompt }}
+```
+
+### Template with Conditional Logic
+
+```markdown
+---
+name: "Smart Review"
+flag: "smart-review"
+---
+
+# Code Review
+
+{{ if .Files }}
+Reviewing {{ len .Files }} file(s):
+{{- range .Files }}
+- {{ .Path }}
+{{- end }}
+{{ end }}
+
+{{ .Prompt }}
+
+Provide specific, actionable feedback.
+```
+
+## Minimal Examples
+
+### Frontmatter-Only
+
+```markdown
+---
+name: "Empty Template"
+description: "Template with no content"
+flag: "empty"
+---
+```
+
+Useful for templates that only need to trigger certain behavior.
+
+### Content-Only
+
+```markdown
+Review this code for best practices and potential bugs.
+```
+
+This works but won't have a custom flag or appear in lists with metadata.
+
+## Special Characters
+
+Frontmatter values with special characters should be quoted:
+
+```yaml
+name: "Review: Security & Performance"
+description: "Check security, performance, and best practices"
+flag: "security-perf"
+```
+
+## Comments
+
+YAML comments in frontmatter:
+
+```yaml
+---
+name: "Code Review"
+# This is a comment
+description: "Review code"
+# flag: "old-flag"  # Commented out
+flag: "code-review"
+---
+```
+
+Markdown comments in content:
+
+```markdown
+<!-- This is a comment -->
+
+# Template Content
+
+<!-- TODO: Add more examples -->
+```
+
+Go template comments:
+
+```markdown
+{{/* This comment won't appear in output */}}
+{{ .Prompt }}
+```
+
+## Validation
+
+Prompter validates:
+- Frontmatter is valid YAML
+- Shorthand is single character
+- Flag doesn't conflict with built-in flags
+- Go template syntax is valid
+
+Invalid templates are skipped with a warning.
+
+## Best Practices
+
+1. **Always include description** - Helps users understand when to use the template
+2. **Use descriptive flags** - Make them memorable and related to purpose
+3. **Choose unique shorthands** - Avoid conflicts with other templates
+4. **Pin frequently used templates** - Makes them easier to find
+5. **Keep content focused** - One purpose per template
+6. **Use Go templates sparingly** - Only when you need dynamic behavior
+7. **Test with sample data** - Ensure templates work as expected
+8. **Include examples** - Show expected usage patterns
+
+## Template Organization
+
+Store templates in nested folders:
+
+```
+prompts/
+├── reviews/
+│   ├── code-review.md
+│   ├── security.md
+│   └── performance.md
+├── documentation/
+│   ├── api-docs.md
+│   └── readme.md
+└── project-context.md
+```
+
+Nested folders are supported and help organize large template libraries.

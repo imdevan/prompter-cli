@@ -1,0 +1,81 @@
+---
+title: Use Cases
+description: Common use cases and workflows
+---
+
+Prompter is a bit of weird tool that was made to what is probably a pretty niche problem.
+
+## Aliases
+
+I was torn between naming this project prmpt and prompter. I ended up landing on prompter as it is more clear
+as to what the function of the package is.
+
+Personal, I alias the project to simply `p`.
+
+```.zshrc
+alias p = 'prompter'
+alias ph = 'prompter history'
+```
+
+Which makes generating and revisiting prompt chains very easy and require minimal keystrokes :)
+
+### Common template usage
+
+```bash
+p -q 'why is this code slow?' -B
+
+# prepend question.md template
+# base prompt
+# clipboard contents (funciton name or file:line)
+```
+
+### Pipe test results
+
+```bash
+bun test | p -f
+
+# run test
+# pipe output to prompter
+# prepend fix.md template
+```
+
+### Keeping prompt history together
+
+Often when I'm agentic coding; even if I'm using some kind of plan based workflow.
+I find myself needing to create additional prompts to guide the agent.
+
+I could just type this right into the agent, but I kind of hate most agent editor
+input boxes. Ironically, this goes doubly so for TUI based agents as the input boxes are
+just weird not not vim motion friendly. Also no records of the chat are really saved for my own reference.
+
+Using prompter and
+
+```bash
+prompter history 1 -n
+# with alias
+ph 1 -n
+
+# open last prompt in insert mode
+```
+
+```bash
+p -G feat "implement some feature from plan.md"
+# creates a prompt that is saved to prompts/history
+
+ph feat -n 
+# gives me a clean surface to setch out a prompt before sending
+```
+
+## Please and Thank You
+
+I don't know if there is any truth to saying please and thank you to llm's but if you want to be polite, add the following to your `prompts/index.md` file.
+
+```index.md
+Please,
+
+{{.Prompt}}
+
+Thank you
+```
+
+Any prompts created with prompter will start with "Please" and end with "Thank you"

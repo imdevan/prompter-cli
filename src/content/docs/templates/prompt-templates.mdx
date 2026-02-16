@@ -1,0 +1,391 @@
+---
+title: Prompt Templates
+description: Creating effective prompt templates
+---
+
+Learn how to create effective prompt templates for AI coding agents.
+
+## What Makes a Good Template
+
+Good templates are:
+- **Focused** - One clear purpose
+- **Specific** - Clear instructions
+- **Reusable** - Work across different contexts
+- **Structured** - Organized and scannable
+- **Actionable** - Tell the AI what to do
+
+## Template Structure
+
+Templates are Markdown files with optional frontmatter. If `flag` or `shorthand` are not set, Prompter generates them from the file name.
+
+```markdown
+---
+name: "Code Review"
+description: "Review for bugs, clarity, and tests"
+flag: "code-review"
+shorthand: "r"
+pin: false
+---
+
+# Code Review
+
+Review the following changes for correctness and clarity.
+```
+
+## Template Patterns
+
+### Code Review Template
+
+```markdown
+---
+name: "Code Review"
+description: "Review code for quality and best practices"
+flag: "code-review"
+shorthand: "r"
+pin: true
+---
+
+# Code Review
+
+Review this code for:
+
+## Code Quality
+- Readability and maintainability
+- Naming conventions
+- Code organization
+- DRY principle adherence
+
+## Best Practices
+- Language-specific idioms
+- Design patterns
+- Error handling
+- Edge cases
+
+## Potential Issues
+- Bugs or logic errors
+- Performance concerns
+- Security vulnerabilities
+- Memory leaks
+
+Provide specific suggestions for improvement.
+```
+
+### Bug Fix Template
+
+```markdown
+---
+name: "Bug Fix"
+description: "Help diagnose and fix bugs"
+flag: "bug-fix"
+shorthand: "b"
+---
+
+# Bug Fix
+
+Help me fix this bug:
+
+## Analysis
+1. Identify the root cause
+2. Explain why it's happening
+3. Assess the impact
+
+## Solution
+1. Propose a fix
+2. Explain the approach
+3. Consider edge cases
+4. Suggest tests to prevent regression
+
+## Prevention
+Suggest how to prevent similar bugs in the future.
+```
+
+### Security Review Template
+
+```markdown
+---
+name: "Security Review"
+description: "Review code for security issues"
+flag: "security"
+shorthand: "s"
+---
+
+# Security Review
+
+Review this code for security vulnerabilities:
+
+## Input Validation
+- SQL injection
+- XSS attacks
+- Command injection
+- Path traversal
+
+## Authentication & Authorization
+- Authentication bypass
+- Privilege escalation
+- Session management
+
+## Data Protection
+- Sensitive data exposure
+- Encryption usage
+- Secure storage
+
+## Dependencies
+- Known vulnerabilities
+- Outdated packages
+- Insecure configurations
+
+Rate severity (Critical/High/Medium/Low) and provide remediation steps.
+```
+
+### Documentation Template
+
+```markdown
+---
+name: "Document"
+description: "Generate documentation"
+flag: "document"
+shorthand: "d"
+---
+
+# Documentation
+
+Generate documentation for this code:
+
+## Overview
+- Purpose and functionality
+- Key components
+- Dependencies
+
+## API Documentation
+- Function/method signatures
+- Parameters and return values
+- Usage examples
+- Edge cases and errors
+
+## Implementation Notes
+- Important algorithms
+- Design decisions
+- Performance considerations
+
+Use clear, concise language suitable for developers.
+```
+
+## Dynamic Templates with Go Syntax
+
+### Context Wrapper
+
+```markdown
+---
+name: "Project Context"
+description: "Wrap prompt with project context"
+flag: "context"
+shorthand: "c"
+---
+
+# Project Context
+
+Working directory: {{ .CWD }}
+
+{{ .Prompt }}
+
+Please follow project conventions when suggesting changes.
+```
+
+### File Summary
+
+```markdown
+---
+name: "File Summary"
+description: "Summarize included files"
+flag: "file-summary"
+---
+
+# File Summary
+
+{{- range .Files }}
+## {{ .Path }}
+{{ mdFence "auto" .Content }}
+{{- end }}
+
+{{ .BasePrompt }}
+```
+
+### Conditional Review
+
+```markdown
+---
+name: "Smart Review"
+flag: "smart-review"
+---
+
+# Code Review
+
+{{ if .Files }}
+Reviewing {{ len .Files }} file(s):
+{{- range .Files }}
+- {{ .Path }}
+{{- end }}
+{{ end }}
+
+{{ .Prompt }}
+
+Provide specific, actionable feedback.
+```
+
+## Context-Specific Templates
+
+### API Design Template
+
+```markdown
+---
+name: "API Design"
+description: "Review API design"
+flag: "api-design"
+---
+
+# API Design Review
+
+Review this API design:
+
+## RESTful Principles
+- Resource naming
+- HTTP methods
+- Status codes
+- Idempotency
+
+## Design Quality
+- Consistency
+- Versioning strategy
+- Error responses
+- Pagination
+
+## Documentation
+- Endpoint descriptions
+- Request/response examples
+- Authentication requirements
+
+## Best Practices
+- Rate limiting
+- Caching headers
+- CORS configuration
+```
+
+### Database Schema Template
+
+```markdown
+---
+name: "Database Schema"
+description: "Review database schema"
+flag: "db-schema"
+---
+
+# Database Schema Review
+
+Review this database schema:
+
+## Design
+- Normalization
+- Relationships
+- Constraints
+- Indexes
+
+## Performance
+- Query optimization
+- Index strategy
+- Partitioning needs
+
+## Data Integrity
+- Foreign keys
+- Check constraints
+- Unique constraints
+- Default values
+
+## Scalability
+- Growth considerations
+- Archival strategy
+- Sharding potential
+```
+
+### Performance Optimization Template
+
+```markdown
+---
+name: "Performance"
+description: "Optimize performance"
+flag: "performance"
+shorthand: "p"
+---
+
+# Performance Optimization
+
+Analyze and optimize this code for performance:
+
+## Bottlenecks
+- Identify slow operations
+- Measure complexity
+- Profile hot paths
+
+## Optimizations
+- Algorithm improvements
+- Caching opportunities
+- Lazy loading
+- Batch operations
+
+## Trade-offs
+- Memory vs speed
+- Complexity vs performance
+- Maintainability impact
+
+Provide benchmarks or estimates where possible.
+```
+
+## Combining Templates
+
+Templates can be combined for comprehensive reviews:
+
+```bash
+# Code review with security check
+prompter --code-review --security
+
+# Refactoring with tests
+prompter --refactor --tests
+
+# Full review
+prompter --code-review --security --performance
+```
+
+## Template Organization
+
+Build a library of templates for common tasks:
+
+```
+prompts/
+├── reviews/
+│   ├── code-review.md
+│   ├── security.md
+│   └── performance.md
+├── documentation/
+│   ├── api-docs.md
+│   └── readme.md
+├── fixes/
+│   ├── bug-fix.md
+│   └── refactor.md
+└── project-context.md
+```
+
+## Best Practices
+
+1. **Start simple** - Begin with basic templates and refine over time
+2. **Use checklists** - Make it easy for AI to be thorough
+3. **Be specific** - Vague instructions lead to vague responses
+4. **Include examples** - Show what you want
+5. **Iterate** - Improve templates based on results
+6. **Share templates** - Collaborate with your team
+7. **Version control** - Keep templates in git
+8. **Use Go templates sparingly** - Only when you need dynamic behavior
+
+## Next Steps
+
+- Explore [template syntax](/templates/syntax/) for frontmatter and Go templates
+- Understand [template discovery](/templates/discovery/) for organizing templates
+- Check out [configuration options](/configuration/) for customizing behavior
